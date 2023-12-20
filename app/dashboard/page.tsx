@@ -15,20 +15,22 @@ const DashboardPage = async () => {
 
   return (
     <div className="w-full px-6 py-8 flex flex-col gap-5">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Courses</h2>
-
-        <Button variant="outline">
-          <PlusIcon className="mr-2 h-4 w-4" />
-          New Course
-        </Button>
-      </div>
-
       <Tabs defaultValue="student" className="">
-        <TabsList className="mb-3">
-          <TabsTrigger value="student">Student</TabsTrigger>
-          <TabsTrigger value="teacher">Teacher</TabsTrigger>
-        </TabsList>
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex gap-4 items-center">
+            <h2 className="text-3xl font-bold tracking-tight">Courses</h2>
+
+            <TabsList className="">
+              <TabsTrigger value="student">Student</TabsTrigger>
+              <TabsTrigger value="teacher">Teacher</TabsTrigger>
+            </TabsList>
+          </div>
+
+          <Button variant="outline">
+            <PlusIcon className="mr-2 h-4 w-4" />
+            New Course
+          </Button>
+        </div>
 
         <TabsContent value="student">
           <div className="flex gap-4 flex-wrap">
