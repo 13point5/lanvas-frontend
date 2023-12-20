@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { sampleCourses } from "@/app/dashboard/sample-data/courses";
 import { CoursePreviewCard } from "@/app/dashboard/components/course-preview-card";
+import { NewCourseButton } from "@/app/dashboard/components/new-course-button";
 
 const DashboardPage = async () => {
   const supabase = createServerComponentClient<Database>({ cookies });
@@ -26,10 +27,7 @@ const DashboardPage = async () => {
             </TabsList>
           </div>
 
-          <Button variant="outline">
-            <PlusIcon className="mr-2 h-4 w-4" />
-            New Course
-          </Button>
+          <NewCourseButton />
         </div>
 
         <TabsContent value="student">
