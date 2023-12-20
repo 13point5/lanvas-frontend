@@ -63,6 +63,7 @@ const SignInForm = () => {
       email: values.email,
       password: values.password,
     });
+    console.log("res", res);
 
     if (res.error) {
       console.error(res.error);

@@ -24,6 +24,8 @@ import { FormStatus } from "@/app/types";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useBoolean } from "@/lib/hooks/useBoolean";
+import axios from "axios";
+import { useCoursesApi } from "@/lib/api/courses";
 
 const formSchema = z.object({
   title: z.string(),
@@ -31,6 +33,8 @@ const formSchema = z.object({
 
 export const NewCourseButton = () => {
   const dialogState = useBoolean();
+
+  const { createCourse } = useCoursesApi();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,7 +50,14 @@ export const NewCourseButton = () => {
 
     setFormStatus(FormStatus.Loading);
 
-    setFormStatus(FormStatus.Success);
+    try {
+      const res = await createCourse(values);
+      console.log("res", res);
+      setFormStatus(FormStatus.Success);
+    } catch (error) {
+      console.error(error);
+      setFormStatus(FormStatus.Error);
+    }
   };
 
   useEffect(() => {
