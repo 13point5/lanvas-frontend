@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,18 +23,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import * as z from "zod";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useState } from "react";
-import { Loader2Icon } from "lucide-react";
+import { SignInFooter } from "@/components/AuthFormFooters";
 import toast from "react-hot-toast";
-import {
-  ForgotPasswordFooter,
-  SignUpFooter,
-} from "@/components/AuthFormFooters";
-
-const formSchema = z.object({
-  email: z.string(),
-  password: z.string(),
-});
+import { Loader2Icon } from "lucide-react";
 
 enum FormStatus {
   Idle,
@@ -42,9 +34,15 @@ enum FormStatus {
   Success,
 }
 
-const SignInForm = () => {
+const formSchema = z.object({
+  email: z.string(),
+  password: z.string(),
+});
+
+const SignUpForm = () => {
   const supabase = createClientComponentClient();
 
+  const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Idle);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,30 +51,31 @@ const SignInForm = () => {
     },
   });
 
-  // state for signin progress, error, and success
-  const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Idle);
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setFormStatus(FormStatus.Loading);
 
-    const res = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
+      options: {
+        emailRedirectTo: `${location.origin}/api/auth/callback`,
+      },
     });
 
-    if (res.error) {
-      console.error(res.error);
+    if (error) {
+      console.error(error);
       setFormStatus(FormStatus.Error);
-      toast.error("Could not Sign In", {
+      toast.error(error.message, {
         position: "bottom-center",
       });
+
       return;
     }
 
-    setFormStatus(FormStatus.Success);
-    toast.success("Signed In! Redirecting to your dashboard", {
+    toast.success("Check your email for the confirmation link", {
       position: "bottom-center",
     });
+    setFormStatus(FormStatus.Success);
   };
 
   return (
@@ -84,7 +83,7 @@ const SignInForm = () => {
       <h1 className="text-4xl font-bold">CourseLM</h1>
       <Card className="max-w-sm w-full">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl">Sign In</CardTitle>
+          <CardTitle className="text-2xl">Create an account</CardTitle>
         </CardHeader>
 
         <Form {...form}>
@@ -121,17 +120,16 @@ const SignInForm = () => {
               <Button type="submit" className="w-full">
                 {formStatus === FormStatus.Loading && (
                   <>
-                    <Loader2Icon className="animate-spin mr-2" /> Signing In
+                    <Loader2Icon className="animate-spin mr-2" /> Signing up
                   </>
                 )}
 
-                {formStatus !== FormStatus.Loading && "Sign In"}
+                {formStatus !== FormStatus.Loading && "Sign Up"}
               </Button>
             </CardContent>
 
-            <CardFooter className="flex flex-col gap-2">
-              <ForgotPasswordFooter />
-              <SignUpFooter />
+            <CardFooter>
+              <SignInFooter />
             </CardFooter>
           </form>
         </Form>
@@ -140,4 +138,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;
