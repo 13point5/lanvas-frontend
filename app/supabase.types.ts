@@ -11,25 +11,25 @@ export interface Database {
     Tables: {
       course_members: {
         Row: {
-          course_id: number | null
+          course_id: number
           created_at: string
           id: number
           role: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
-          course_id?: number | null
+          course_id: number
           created_at?: string
           id?: number
           role: string
-          user_id?: string | null
+          user_id?: string
         }
         Update: {
-          course_id?: number | null
+          course_id?: number
           created_at?: string
           id?: number
           role?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -52,17 +52,17 @@ export interface Database {
         Row: {
           created_at: string
           id: number
-          title: string | null
+          title: string
         }
         Insert: {
           created_at?: string
           id?: number
-          title?: string | null
+          title?: string
         }
         Update: {
           created_at?: string
           id?: number
-          title?: string | null
+          title?: string
         }
         Relationships: []
       }
@@ -71,7 +71,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      hello: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

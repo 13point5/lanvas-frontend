@@ -7,55 +7,55 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { sampleCourses } from "@/app/dashboard/sample-data/courses";
 import { CoursePreviewCard } from "@/app/dashboard/components/course-preview-card";
 import { NewCourseButton } from "@/app/dashboard/components/new-course-button";
+import { redirect } from "next/navigation";
+import { Dashboard } from "@/app/dashboard/components/dashboard";
 
 const DashboardPage = async () => {
   const supabase = createServerComponentClient<Database>({ cookies });
 
-  const data = await supabase.from("courses").select("*");
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/");
+  }
+
+  const data = await supabase
+    .from("course_members")
+    .select(
+      `
+      role,
+      courses (
+        id,
+        title
+      )
+    `
+    )
+    .eq("user_id", user.id);
   console.log("data", data);
 
-  return (
-    <div className="w-full px-6 py-8 flex flex-col gap-5">
-      <Tabs defaultValue="student" className="">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex gap-4 items-center">
-            <h2 className="text-3xl font-bold tracking-tight">Courses</h2>
+  if (data.error) {
+    return <div>Error</div>;
+  }
 
-            <TabsList className="">
-              <TabsTrigger value="student">Student</TabsTrigger>
-              <TabsTrigger value="teacher">Teacher</TabsTrigger>
-            </TabsList>
-          </div>
+  const filteredCourses = data.data.filter(
+    (item) => item.courses && item.courses?.id && item.courses?.title
+  ) as Array<{
+    role: string;
+    courses: {
+      id: number;
+      title: string;
+    };
+  }>;
 
-          <NewCourseButton />
-        </div>
+  const courses = filteredCourses.map((item) => ({
+    id: item.courses.id,
+    title: item.courses.title,
+    role: item.role,
+  }));
 
-        <TabsContent value="student">
-          <div className="flex gap-4 flex-wrap">
-            {sampleCourses.map((course) => (
-              <CoursePreviewCard
-                key={course.id}
-                id={course.id}
-                title={course.title}
-              />
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="teacher">
-          <div className="flex gap-4 flex-wrap">
-            {sampleCourses.map((course) => (
-              <CoursePreviewCard
-                key={course.id}
-                id={course.id}
-                title={course.title}
-              />
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+  return <Dashboard courses={courses} />;
 };
 
 export default DashboardPage;
