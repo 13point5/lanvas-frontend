@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type Props = {
   id: number;
   title: string;
@@ -22,12 +24,14 @@ export const CoursePreviewCard = ({ id, title }: Props) => {
   const color = colors[Math.floor(Math.random() * colors.length)];
 
   return (
-    <div className="flex flex-col rounded-md shadow-md w-[300px] h-[250px]">
-      <div className={`w-full h-[60%] ${color} rounded-t-md`}></div>
+    <Link href={`/course/${id}`}>
+      <div className="bg-white flex flex-col rounded-md shadow-md w-[300px] h-[250px] hover:scale-105">
+        <div className={`w-full h-[60%] ${color} rounded-t-md`}></div>
 
-      <div className="px-4 py-2">
-        <p className="text-lg font-normal text-wrap truncate">{title}</p>
+        <div className="px-4 py-2">
+          <p className="text-lg font-normal text-wrap truncate">{title}</p>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };

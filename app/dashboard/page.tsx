@@ -17,7 +17,7 @@ const DashboardPage = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user || !user.email) {
     redirect("/");
   }
 
@@ -32,7 +32,7 @@ const DashboardPage = async () => {
       )
     `
     )
-    .eq("user_id", user.id);
+    .eq("email", user.email);
   console.log("data", data);
 
   if (data.error) {

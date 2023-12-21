@@ -35,6 +35,7 @@ enum FormStatus {
 }
 
 const formSchema = z.object({
+  full_name: z.string(),
   email: z.string(),
   password: z.string(),
 });
@@ -46,6 +47,7 @@ const SignUpForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      full_name: "",
       email: "",
       password: "",
     },
@@ -58,6 +60,9 @@ const SignUpForm = () => {
       email: values.email,
       password: values.password,
       options: {
+        data: {
+          full_name: values.full_name,
+        },
         emailRedirectTo: `${location.origin}/api/auth/callback`,
       },
     });
@@ -89,6 +94,20 @@ const SignUpForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <CardContent className="grid gap-6">
+              <FormField
+                control={form.control}
+                name="full_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="email"

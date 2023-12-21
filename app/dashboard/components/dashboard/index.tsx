@@ -48,7 +48,7 @@ export const Dashboard = ({ courses }: Props) => {
         </div>
 
         <TabsContent value="student">
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex gap-6 flex-wrap">
             {(groupedCourses.student || []).map((course) => (
               <CoursePreviewCard
                 key={course.id}
@@ -60,7 +60,7 @@ export const Dashboard = ({ courses }: Props) => {
         </TabsContent>
 
         <TabsContent value="teacher">
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex gap-6 flex-wrap">
             {(groupedCourses.teacher || []).map((course) => (
               <CoursePreviewCard
                 key={course.id}
