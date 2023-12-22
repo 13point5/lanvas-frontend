@@ -3,8 +3,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StudentsTab from "@/app/course/[id]/components/students-tab";
 import { useCoursesApi } from "@/lib/api/courses";
-import { Course, CourseMember, FormStatus } from "@/app/types";
+import { Course, CourseMaterial, CourseMember, FormStatus } from "@/app/types";
 import { useEffect, useState } from "react";
+import MaterialsTab from "@/app/course/[id]/components/materials-tab";
 
 type CourseDataState =
   | {
@@ -91,6 +92,20 @@ export default function CoursePage({ params: { id } }: Props) {
     });
   };
 
+  const handleAddCourseMaterials = (materials: CourseMaterial[]) => {
+    setCourseData((prev) => {
+      if (!prev.data) return prev;
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          course_materials: [...prev.data.course_materials, ...materials],
+        },
+      };
+    });
+  };
+
   if (
     courseData.status === FormStatus.Loading ||
     courseData.status === FormStatus.Idle
@@ -109,12 +124,18 @@ export default function CoursePage({ params: { id } }: Props) {
     <div className="w-full px-6 py-8 flex flex-col gap-5">
       <h2 className="text-3xl font-bold tracking-tight">{course.title}</h2>
 
-      <Tabs defaultValue="students" className="">
+      <Tabs defaultValue="materials" className="">
         <TabsList className="mb-6">
-          <TabsTrigger value="files">Files</TabsTrigger>
+          <TabsTrigger value="materials">Materials</TabsTrigger>
           <TabsTrigger value="students">Students</TabsTrigger>
         </TabsList>
-        <TabsContent value="files">Upload course files here</TabsContent>
+        <TabsContent value="materials">
+          <MaterialsTab
+            courseId={id}
+            data={course.course_materials}
+            onAddData={handleAddCourseMaterials}
+          />
+        </TabsContent>
         <TabsContent value="students">
           <StudentsTab
             members={course.course_members}

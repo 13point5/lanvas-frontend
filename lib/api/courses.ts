@@ -30,6 +30,17 @@ const addCourseMembers = (
     members: payload.members,
   });
 
+type UploadCourseMaterialPayload = {
+  courseId: number;
+  formData: FormData;
+};
+
+const uploadCourseMaterial = (
+  payload: UploadCourseMaterialPayload,
+  axiosInstance: AxiosInstance
+) =>
+  axiosInstance.post(`/courses/${payload.courseId}/upload`, payload.formData);
+
 export const useCoursesApi = () => {
   const { axiosInstance } = useAxios();
 
@@ -39,5 +50,7 @@ export const useCoursesApi = () => {
     getCourse: (payload: GetCoursePayload) => getCourse(payload, axiosInstance),
     addCourseMembers: (payload: AddCourseMembersPayload) =>
       addCourseMembers(payload, axiosInstance),
+    uploadCourseMaterial: (payload: UploadCourseMaterialPayload) =>
+      uploadCourseMaterial(payload, axiosInstance),
   };
 };

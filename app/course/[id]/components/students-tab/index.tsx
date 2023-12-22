@@ -9,7 +9,7 @@ import { useBoolean } from "@/lib/hooks/useBoolean";
 import { Button } from "@/components/ui/button";
 import InviteStudentsDialog from "@/app/course/[id]/components/students-tab/invite-students-dialog";
 import { useCoursesApi } from "@/lib/api/courses";
-import { DataTable } from "@/app/course/[id]/components/students-tab/data-table";
+import { DataTable } from "@/components/data-table";
 import { PlusIcon } from "lucide-react";
 import { CourseMember } from "@/app/types";
 
