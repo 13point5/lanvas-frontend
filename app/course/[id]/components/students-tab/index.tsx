@@ -15,7 +15,7 @@ import { CourseMember } from "@/app/types";
 
 const columns: ColumnDef<CourseMember>[] = [
   { header: "Email", accessorKey: "email" },
-  { header: "Join Date", accessorKey: "created_at" },
+  { header: "Date Joined", accessorKey: "created_at" },
 ];
 
 type Props = {
