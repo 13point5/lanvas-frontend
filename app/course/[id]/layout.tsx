@@ -24,7 +24,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <main>
+    <main className="h-screen">
       <div className="py-4 px-6 border-b flex items-center justify-between">
         <Link href="/">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">

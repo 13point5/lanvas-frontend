@@ -6,6 +6,7 @@ import { useCoursesApi } from "@/lib/api/courses";
 import { Course, CourseMaterial, CourseMember, FormStatus } from "@/app/types";
 import { useEffect, useState } from "react";
 import MaterialsTab from "@/app/course/[id]/components/materials-tab";
+import ChatTab from "@/app/course/[id]/components/chat-tab";
 
 type CourseDataState =
   | {
@@ -121,14 +122,16 @@ export default function CoursePage({ params: { id } }: Props) {
   console.log("course", course);
 
   return (
-    <div className="w-full px-6 py-8 flex flex-col gap-5">
+    <div className="w-full h-full px-6 py-8 flex flex-col gap-5">
       <h2 className="text-3xl font-bold tracking-tight">{course.title}</h2>
 
-      <Tabs defaultValue="materials" className="">
+      <Tabs defaultValue="chat" className="">
         <TabsList className="mb-6">
           <TabsTrigger value="materials">Materials</TabsTrigger>
           <TabsTrigger value="students">Students</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
+
         <TabsContent value="materials">
           <MaterialsTab
             courseId={id}
@@ -136,11 +139,16 @@ export default function CoursePage({ params: { id } }: Props) {
             onAddData={handleAddCourseMaterials}
           />
         </TabsContent>
+
         <TabsContent value="students">
           <StudentsTab
             members={course.course_members}
             onUpdateMembers={handleUpdateCourseMembers}
           />
+        </TabsContent>
+
+        <TabsContent value="chat" className="h-full">
+          <ChatTab />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,3 +1,15 @@
+export enum Role {
+  assistant,
+  human,
+  system,
+}
+
+export type Message = {
+  role: Role;
+  id: string;
+  content: string;
+};
+
 export enum FormStatus {
   Idle,
   Loading,
