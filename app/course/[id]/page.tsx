@@ -3,7 +3,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StudentsTab from "@/app/course/[id]/components/students-tab";
 import { useCoursesApi } from "@/lib/api/courses";
-import { Course, CourseMaterial, CourseMember, FormStatus } from "@/app/types";
+import {
+  Course,
+  CourseFolder,
+  CourseMaterial,
+  CourseMember,
+  FormStatus,
+} from "@/app/types";
 import { useEffect, useState } from "react";
 import MaterialsTab from "@/app/course/[id]/components/materials-tab";
 import ChatTab from "@/app/course/[id]/components/chat-tab";
@@ -107,6 +113,39 @@ export default function CoursePage({ params: { id } }: Props) {
     });
   };
 
+  const handleAddCourseFolder = (folder: CourseFolder) => {
+    setCourseData((prev) => {
+      if (!prev.data) return prev;
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          course_folders: [...prev.data.course_folders, folder],
+        },
+      };
+    });
+  };
+
+  const handleUpdateFolder = (folder: CourseFolder) => {
+    setCourseData((prev) => {
+      if (!prev.data) return prev;
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          course_folders: prev.data.course_folders.map((f) => {
+            if (f.id === folder.id) {
+              return folder;
+            }
+            return f;
+          }),
+        },
+      };
+    });
+  };
+
   if (
     courseData.status === FormStatus.Loading ||
     courseData.status === FormStatus.Idle
@@ -125,7 +164,7 @@ export default function CoursePage({ params: { id } }: Props) {
     <div className="w-full h-full px-6 py-8 flex flex-col gap-5">
       <h2 className="text-3xl font-bold tracking-tight">{course.title}</h2>
 
-      <Tabs defaultValue="chat" className="">
+      <Tabs defaultValue="materials" className="">
         <TabsList className="mb-6">
           <TabsTrigger value="materials">Materials</TabsTrigger>
           <TabsTrigger value="students">Students</TabsTrigger>
@@ -135,8 +174,11 @@ export default function CoursePage({ params: { id } }: Props) {
         <TabsContent value="materials">
           <MaterialsTab
             courseId={id}
-            data={course.course_materials}
-            onAddData={handleAddCourseMaterials}
+            materials={course.course_materials}
+            onAddMaterials={handleAddCourseMaterials}
+            folders={course.course_folders}
+            onAddFolder={handleAddCourseFolder}
+            onUpdateFolder={handleUpdateFolder}
           />
         </TabsContent>
 

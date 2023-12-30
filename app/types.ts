@@ -33,10 +33,19 @@ export type CourseMaterial = {
   status: string;
 };
 
+export type CourseFolder = {
+  id: number;
+  course_id: number;
+  parent_folder_id: number | null;
+  name: string;
+  created_at: string;
+};
+
 export type Course = {
   id: number;
   created_at: string;
   title: string;
   course_members: CourseMember[];
+  course_folders: CourseFolder[];
   course_materials: CourseMaterial[];
 };
