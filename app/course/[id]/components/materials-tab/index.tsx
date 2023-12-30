@@ -1,12 +1,16 @@
+"use client";
+
+import FolderCard from "@/app/course/[id]/components/folder-card";
+import { NewFolderButton } from "@/app/course/[id]/components/materials-tab/new-folder-button";
 import UploadDialog from "@/app/course/[id]/components/materials-tab/upload-dialog";
-import { CourseMaterial, FormStatus } from "@/app/types";
+import { CourseFolder, CourseMaterial, FormStatus } from "@/app/types";
 import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useCoursesApi } from "@/lib/api/courses";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import { ColumnDef } from "@tanstack/react-table";
-import { UploadIcon } from "lucide-react";
+import { FolderPlusIcon, PlusIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 
 const getStatusLabel = (status: string) => {
@@ -86,11 +90,23 @@ const columns: ColumnDef<CourseMaterial>[] = [
 
 type Props = {
   courseId: number;
-  data: CourseMaterial[];
-  onAddData: (data: CourseMaterial[]) => void;
+
+  materials: CourseMaterial[];
+  onAddMaterials: (data: CourseMaterial[]) => void;
+
+  folders: CourseFolder[];
+  onAddFolder: (data: CourseFolder) => void;
+  onUpdateFolder: (data: CourseFolder) => void;
 };
 
-export default function MaterialsTab({ courseId, data, onAddData }: Props) {
+export default function MaterialsTab({
+  courseId,
+  materials,
+  onAddMaterials,
+  folders,
+  onAddFolder,
+  onUpdateFolder,
+}: Props) {
   const uploadDialogState = useBoolean();
   const [uploadStatus, setUploadStatus] = useState<FormStatus>(FormStatus.Idle);
 
@@ -119,7 +135,7 @@ export default function MaterialsTab({ courseId, data, onAddData }: Props) {
       );
 
       const newFiles = res.map((res) => res.data);
-      onAddData(newFiles);
+      onAddMaterials(newFiles);
 
       setUploadStatus(FormStatus.Success);
       uploadDialogState.off();
@@ -130,15 +146,23 @@ export default function MaterialsTab({ courseId, data, onAddData }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <Button
-        variant="outline"
-        className="w-fit"
-        onClick={uploadDialogState.on}
-      >
-        <UploadIcon className="mr-2 h-4 w-4" />
-        Upload Materials
-      </Button>
+    <div className="flex flex-col gap-8">
+      <div className="flex gap-4 items-center">
+        <Button
+          variant="outline"
+          className="w-fit"
+          onClick={uploadDialogState.on}
+        >
+          <UploadIcon className="mr-2 h-4 w-4" />
+          Upload Materials
+        </Button>
+
+        <NewFolderButton
+          courseId={courseId}
+          parentFolderId={null}
+          onAddFolder={onAddFolder}
+        />
+      </div>
 
       <UploadDialog
         open={uploadDialogState.value}
@@ -147,7 +171,21 @@ export default function MaterialsTab({ courseId, data, onAddData }: Props) {
         onUpload={handleUpload}
       />
 
-      <DataTable columns={columns} data={data} />
+      <div className="flex flex-col gap-2">
+        <h4 className="text-lg font-semibold tracking-tight">Folders</h4>
+
+        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+          {folders.map((folder) => (
+            <FolderCard
+              key={folder.id}
+              id={folder.id}
+              courseId={courseId}
+              name={folder.name}
+              onUpdate={onUpdateFolder}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
