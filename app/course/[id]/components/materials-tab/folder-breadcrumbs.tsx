@@ -12,7 +12,7 @@ const FolderBreadcrumbs = ({ items, onItemClick }: Props) => {
   return (
     <div className="flex gap-2 items-center">
       <h4
-        className={`text-lg font-medium cursor-pointer ${
+        className={`text-lg font-semibold cursor-pointer ${
           items.length > 0 ? "text-gray-400" : "text-foreground"
         }`}
         onClick={() => onItemClick(null)}
@@ -29,16 +29,16 @@ const FolderBreadcrumbs = ({ items, onItemClick }: Props) => {
 
         return (
           <div key={item.id} className="flex gap-2 items-center">
-            <p
+            <h4
               onClick={() => {
                 onItemClick(item.id);
               }}
-              className={`text-lg font-medium cursor-pointer ${
+              className={`text-lg font-semibold cursor-pointer ${
                 isLastItem ? "text-foreground" : "text-gray-400"
               }`}
             >
               {item.name}
-            </p>
+            </h4>
             {!isLastItem && (
               <ChevronRightIcon className="text-gray-400" size={18} />
             )}

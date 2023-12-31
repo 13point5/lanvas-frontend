@@ -320,7 +320,7 @@ export default function MaterialsTab({
       />
 
       <div className="flex flex-col gap-2">
-        <h4 className="text-lg font-semibold tracking-tight">Folders</h4>
+        <h5 className="text-md font-semibold tracking-tight">Folders</h5>
 
         <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
           {childrenFolderIds.map((folderId) => {
