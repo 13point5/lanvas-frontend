@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   FolderIcon,
+  FolderSymlinkIcon,
   MoreVerticalIcon,
   PencilIcon,
   TrashIcon,
@@ -19,6 +20,7 @@ import {
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import RenameFolderDialog from "@/app/course/[id]/components/folder-card/rename-dialog";
 import { CourseFolder } from "@/app/types";
+import MoveFolderDialog from "@/app/course/[id]/components/folder-card/move-dialog";
 
 type Props = {
   id: number;
@@ -34,6 +36,8 @@ const FolderCard = ({ id, courseId, name, onUpdate, onClick }: Props) => {
   const handleRename = (data: CourseFolder) => {
     onUpdate(data);
   };
+
+  const moveDialogState = useBoolean();
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
@@ -62,15 +66,28 @@ const FolderCard = ({ id, courseId, name, onUpdate, onClick }: Props) => {
               <MoreVerticalIcon className="" size={18} />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent>
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
 
                 renameDialogState.on();
               }}
             >
               <PencilIcon className="mr-4" size={14} /> Rename
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                moveDialogState.on();
+              }}
+            >
+              <FolderSymlinkIcon className="mr-4" size={14} /> Move
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -83,6 +100,13 @@ const FolderCard = ({ id, courseId, name, onUpdate, onClick }: Props) => {
         open={renameDialogState.value}
         onOpenChange={renameDialogState.setValue}
         onRename={handleRename}
+      />
+
+      <MoveFolderDialog
+        id={id}
+        courseId={courseId}
+        open={moveDialogState.value}
+        onOpenChange={moveDialogState.setValue}
       />
     </>
   );
