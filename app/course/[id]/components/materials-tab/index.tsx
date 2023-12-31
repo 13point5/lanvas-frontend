@@ -89,9 +89,9 @@ const columns: ColumnDef<CourseMaterial>[] = [
   { header: "Date Created", accessorKey: "created_at" },
 ];
 
-type FolderPathItem = {
-  id: number;
-  name: string;
+type FoldersById = CourseFolder & {
+  folders: number[];
+  materials: number[];
 };
 
 const getFolderAndMaterialsTree = (
@@ -99,13 +99,7 @@ const getFolderAndMaterialsTree = (
   materials: CourseMaterial[]
 ) => {
   const result: {
-    foldersById: Map<
-      number,
-      CourseFolder & {
-        folders: number[];
-        materials: number[];
-      }
-    >;
+    foldersById: Map<number, FoldersById>;
 
     materialsById: Map<
       number,
@@ -228,11 +222,17 @@ export default function MaterialsTab({
   const foldersAndMaterialsTree = getFolderAndMaterialsTree(folders, materials);
 
   const [folderPathIds, setFolderPathIds] = useState<number[]>([]);
+
   const activeFolderId =
     folderPathIds.length > 0 ? folderPathIds[folderPathIds.length - 1] : null;
+
   const childrenFolderIds = activeFolderId
     ? foldersAndMaterialsTree.foldersById.get(activeFolderId)?.folders || []
     : foldersAndMaterialsTree.rootFolders;
+
+  const childrenFolders = childrenFolderIds
+    .map((id) => foldersAndMaterialsTree.foldersById.get(id))
+    .filter((folder): folder is FoldersById => folder !== undefined);
 
   const handleFolderClick = (id: number) => {
     setFolderPathIds((prev) => [...prev, id]);
@@ -323,21 +323,16 @@ export default function MaterialsTab({
         <h5 className="text-md font-semibold tracking-tight">Folders</h5>
 
         <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
-          {childrenFolderIds.map((folderId) => {
-            const folder = foldersAndMaterialsTree.foldersById.get(folderId);
-            if (!folder) return null;
-
-            return (
-              <FolderCard
-                key={folder.id}
-                id={folder.id}
-                courseId={courseId}
-                name={folder.name}
-                onUpdate={onUpdateFolder}
-                onClick={handleFolderClick}
-              />
-            );
-          })}
+          {childrenFolders.map((folder) => (
+            <FolderCard
+              key={folder.id}
+              id={folder.id}
+              courseId={courseId}
+              name={folder.name}
+              onUpdate={onUpdateFolder}
+              onClick={handleFolderClick}
+            />
+          ))}
         </div>
       </div>
     </div>
