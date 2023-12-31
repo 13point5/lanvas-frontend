@@ -28,7 +28,7 @@ export default async function DashboardLayout({
       <div className="py-4 px-6 border-b flex items-center justify-between">
         <Link href="/">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            CourseLM
+            Lanvas
           </h4>
         </Link>
 
