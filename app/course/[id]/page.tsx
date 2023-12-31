@@ -1,6 +1,17 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
+
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs-v2";
+import { Button } from "@/components/ui/button";
+import { ChevronRightIcon, HomeIcon, SlashIcon, UserIcon } from "lucide-react";
+import { UserMenu } from "@/app/dashboard/components/user-menu";
+
 import StudentsTab from "@/app/course/[id]/components/students-tab";
 import { useCoursesApi } from "@/lib/api/courses";
 import {
@@ -13,6 +24,7 @@ import {
 import { useEffect, useState } from "react";
 import MaterialsTab from "@/app/course/[id]/components/materials-tab";
 import ChatTab from "@/app/course/[id]/components/chat-tab";
+import { usePathname } from "next/navigation";
 
 type CourseDataState =
   | {
@@ -44,6 +56,8 @@ type Props = {
 
 export default function CoursePage({ params: { id } }: Props) {
   console.log("id", id);
+
+  const [activeTab, setActiveTab] = useState("materials");
 
   const { getCourse } = useCoursesApi();
 
@@ -161,17 +175,37 @@ export default function CoursePage({ params: { id } }: Props) {
   console.log("course", course);
 
   return (
-    <div className="w-full h-full px-6 py-8 flex flex-col gap-5">
-      <h2 className="text-3xl font-bold tracking-tight">{course.title}</h2>
+    <main className="h-screen">
+      <div className="flex flex-col gap-2 pt-4 px-6 border-b">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2 items-center">
+            <Link href="/">
+              <HomeIcon size={20} />
+            </Link>
 
-      <Tabs defaultValue="materials" className="">
-        <TabsList className="mb-6">
-          <TabsTrigger value="materials">Materials</TabsTrigger>
-          <TabsTrigger value="students">Students</TabsTrigger>
-          <TabsTrigger value="chat">Chat</TabsTrigger>
-        </TabsList>
+            <ChevronRightIcon size={20} />
 
-        <TabsContent value="materials">
+            <Link href={`/course/${id}`}>
+              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                Alb2
+              </h4>
+            </Link>
+          </div>
+
+          <UserMenu />
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="">
+            <TabsTrigger value="materials">Materials</TabsTrigger>
+            <TabsTrigger value="students">Students</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      <div className="w-full h-full px-6 py-8 flex flex-col gap-5">
+        {activeTab === "materials" && (
           <MaterialsTab
             courseId={id}
             materials={course.course_materials}
@@ -180,19 +214,17 @@ export default function CoursePage({ params: { id } }: Props) {
             onAddFolder={handleAddCourseFolder}
             onUpdateFolder={handleUpdateFolder}
           />
-        </TabsContent>
+        )}
 
-        <TabsContent value="students">
+        {activeTab === "students" && (
           <StudentsTab
             members={course.course_members}
             onUpdateMembers={handleUpdateCourseMembers}
           />
-        </TabsContent>
+        )}
 
-        <TabsContent value="chat" className="h-full">
-          <ChatTab />
-        </TabsContent>
-      </Tabs>
-    </div>
+        {activeTab === "chat" && <ChatTab />}
+      </div>
+    </main>
   );
 }

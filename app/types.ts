@@ -31,12 +31,13 @@ export type CourseMaterial = {
   created_at: string;
   file_name: string;
   status: string;
+  folder_id: number | null;
 };
 
 export type CourseFolder = {
   id: number;
   course_id: number;
-  parent_folder_id: number | null;
+  parent_id: number | null;
   name: string;
   created_at: string;
 };

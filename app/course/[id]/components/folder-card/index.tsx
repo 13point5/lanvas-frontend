@@ -25,48 +25,56 @@ type Props = {
   courseId: number;
   name: string;
   onUpdate: (data: CourseFolder) => void;
+  onClick: (id: number) => void;
 };
 
-const FolderCard = ({ id, courseId, name, onUpdate }: Props) => {
+const FolderCard = ({ id, courseId, name, onUpdate, onClick }: Props) => {
   const renameDialogState = useBoolean();
 
   const handleRename = (data: CourseFolder) => {
     onUpdate(data);
   };
 
+  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+
+    onClick(id);
+  };
+
   return (
     <>
-      <Link href={`/course/${courseId}/folder/${id}`}>
-        <div className="flex gap-4 items-center justify-between px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg">
-          <div className="flex gap-4 items-center">
-            <FolderIcon className="text-gray-400" size={18} />
-            <p className="text-sm font-medium ">{name}</p>
-          </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit"
-              >
-                <MoreVerticalIcon className="" size={18} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.preventDefault();
-
-                  renameDialogState.on();
-                }}
-              >
-                <PencilIcon className="mr-4" size={14} /> Rename
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      <div
+        onClick={handleClick}
+        className="flex gap-4 items-center justify-between px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg cursor-pointer"
+      >
+        <div className="flex gap-4 items-center">
+          <FolderIcon className="text-gray-400" size={18} />
+          <p className="text-sm font-medium ">{name}</p>
         </div>
-      </Link>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit"
+            >
+              <MoreVerticalIcon className="" size={18} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+
+                renameDialogState.on();
+              }}
+            >
+              <PencilIcon className="mr-4" size={14} /> Rename
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       <RenameFolderDialog
         id={id}

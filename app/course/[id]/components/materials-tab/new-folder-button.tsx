@@ -84,7 +84,7 @@ export const NewFolderButton = ({
 
   return (
     <>
-      <Button variant="outline" onClick={dialogState.on}>
+      <Button variant="outline" onClick={dialogState.on} size="sm">
         <FolderPlusIcon className="mr-2 h-4 w-4" />
         New Folder
       </Button>
