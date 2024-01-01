@@ -1,8 +1,7 @@
 import { OpenState } from "@/components/tree-view/context";
 
 enum ActionTypes {
-  OPEN = "OPEN",
-  CLOSE = "CLOSE",
+  TOGGLE = "TOGGLE",
 }
 
 export type Actions = {
@@ -14,11 +13,11 @@ export type Actions = {
 
 export const reducer = (state: OpenState, action: Actions) => {
   switch (action.type) {
-    case ActionTypes.OPEN:
-      return new Map(state.set(action.payload.id, true));
-
-    case ActionTypes.CLOSE:
-      return new Map(state.set(action.payload.id, false));
+    case ActionTypes.TOGGLE: {
+      const { id } = action.payload;
+      const isOpen = state.get(id) ?? false;
+      return new Map(state).set(id, !isOpen);
+    }
 
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -26,12 +25,8 @@ export const reducer = (state: OpenState, action: Actions) => {
 };
 
 export const actions = {
-  open: (id: string): Actions => ({
-    type: ActionTypes.OPEN,
-    payload: { id },
-  }),
-  close: (id: string): Actions => ({
-    type: ActionTypes.CLOSE,
+  toggle: (id: string | number): Actions => ({
+    type: ActionTypes.TOGGLE,
     payload: { id },
   }),
 };

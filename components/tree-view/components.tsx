@@ -1,7 +1,12 @@
 import clsx from "clsx";
-import { ChevronRightIcon, FolderIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  FolderIcon,
+  FolderOpenIcon,
+} from "lucide-react";
 import { ReactNode, useContext, useReducer } from "react";
-import { reducer } from "@/components/tree-view/reducer";
+import { actions, reducer } from "@/components/tree-view/reducer";
 import { TreeViewContext } from "@/components/tree-view/context";
 
 type NodeType = {
@@ -15,28 +20,34 @@ type NodeProps = {
 };
 
 export const Node = ({ node: { id, label }, children }: NodeProps) => {
-  console.log("id, label, children", id, label, children);
   const { open, dispatch, selectedNodeId, selectNode } =
     useContext(TreeViewContext);
   const isOpen = open.get(id);
 
   return (
     <li className="flex flex-col">
-      <div className={clsx("flex items-center gap-2 px-1")}>
-        <ChevronRightIcon size={16} />
-        <FolderIcon size={16} />
+      <div
+        className={clsx(
+          "flex items-center gap-2 px-1 cursor-pointer hover:bg-slate-100",
+          selectedNodeId === id && "bg-blue-200 hover:bg-blue-200"
+        )}
+        onClick={() => {
+          dispatch(actions.toggle(id));
+          selectNode(id);
+        }}
+      >
+        {isOpen ? (
+          <ChevronDownIcon size={16} />
+        ) : (
+          <ChevronRightIcon size={16} />
+        )}
+
+        {isOpen ? <FolderOpenIcon size={16} /> : <FolderIcon size={16} />}
+
         <span>{label}</span>
       </div>
 
-      {children && <ul className="pl-4">{children}</ul>}
-
-      {/* {children.length > 0 && (
-        <ul className="pl-4">
-          {children.map((node) => (
-            <Node node={node} key={node.id} />
-          ))}
-        </ul>
-      )} */}
+      {children && isOpen && <ul className="pl-4">{children}</ul>}
     </li>
   );
 };

@@ -67,6 +67,10 @@ const MoveFolderDialog = ({
 
   const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Idle);
 
+  const [selectedNodeId, setSelectedNodeId] = useState<string | number | null>(
+    null
+  );
+
   // const { updateCourseFolder } = useCoursesApi();
 
   useEffect(() => {
@@ -83,10 +87,8 @@ const MoveFolderDialog = ({
         </DialogHeader>
 
         <TreeView.Root
-          value="root"
-          onChange={(id) => {
-            console.log("id", id);
-          }}
+          value={selectedNodeId}
+          onChange={(id) => setSelectedNodeId(id)}
         >
           {dataTree.rootFolders.map((folderId) =>
             renderNode(dataTree, folderId)
