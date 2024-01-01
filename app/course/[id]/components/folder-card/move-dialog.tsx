@@ -54,6 +54,7 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   dataTree: FoldersAndMaterialsTree;
+  onSuccess: (folder: CourseFolder) => void;
 };
 
 const MoveFolderDialog = ({
@@ -62,6 +63,7 @@ const MoveFolderDialog = ({
   open,
   onOpenChange,
   dataTree,
+  onSuccess,
 }: Props) => {
   console.log("dataTree", dataTree);
 
@@ -71,7 +73,32 @@ const MoveFolderDialog = ({
     null
   );
 
-  // const { updateCourseFolder } = useCoursesApi();
+  const { moveCourseFolder } = useCoursesApi();
+
+  const handleMoveFolder = async () => {
+    if (formStatus === FormStatus.Loading) {
+      return;
+    }
+
+    if (selectedNodeId === null) {
+      return;
+    }
+
+    setFormStatus(FormStatus.Loading);
+
+    try {
+      const res = await moveCourseFolder({
+        courseId,
+        id,
+        parentId: selectedNodeId as number,
+      });
+      onSuccess(res.data);
+
+      setFormStatus(FormStatus.Success);
+    } catch (error) {
+      setFormStatus(FormStatus.Error);
+    }
+  };
 
   useEffect(() => {
     if (!open) {
@@ -88,7 +115,12 @@ const MoveFolderDialog = ({
 
         <TreeView.Root
           value={selectedNodeId}
-          onChange={(id) => setSelectedNodeId(id)}
+          onChange={(newParentFolderId) => {
+            // don't allow parent folder to be itself
+            if (newParentFolderId === id) return;
+
+            setSelectedNodeId(newParentFolderId);
+          }}
         >
           {dataTree.rootFolders.map((folderId) =>
             renderNode(dataTree, folderId)
@@ -96,7 +128,11 @@ const MoveFolderDialog = ({
         </TreeView.Root>
 
         <DialogFooter>
-          <Button type="submit">
+          <Button
+            type="submit"
+            disabled={formStatus === FormStatus.Loading}
+            onClick={handleMoveFolder}
+          >
             {formStatus === FormStatus.Loading ? (
               <>
                 <Loader2Icon className="animate-spin mr-2 h-4 w-4" />

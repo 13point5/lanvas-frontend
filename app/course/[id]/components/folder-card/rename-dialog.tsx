@@ -35,7 +35,7 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   name: string;
-  onRename: (folder: CourseFolder) => void;
+  onSuccess: (folder: CourseFolder) => void;
 };
 
 const RenameFolderDialog = ({
@@ -44,7 +44,7 @@ const RenameFolderDialog = ({
   open,
   onOpenChange,
   name,
-  onRename,
+  onSuccess: onRename,
 }: Props) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,7 +55,7 @@ const RenameFolderDialog = ({
 
   const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Idle);
 
-  const { updateCourseFolder } = useCoursesApi();
+  const { renameCourseFolder } = useCoursesApi();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("values", values);
@@ -63,7 +63,7 @@ const RenameFolderDialog = ({
     setFormStatus(FormStatus.Loading);
 
     try {
-      const res = await updateCourseFolder({
+      const res = await renameCourseFolder({
         courseId,
         id,
         name: values.name,

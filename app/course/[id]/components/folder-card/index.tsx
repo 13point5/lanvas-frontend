@@ -42,10 +42,6 @@ const FolderCard = ({
 }: Props) => {
   const renameDialogState = useBoolean();
 
-  const handleRename = (data: CourseFolder) => {
-    onUpdate(data);
-  };
-
   const moveDialogState = useBoolean();
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -108,7 +104,7 @@ const FolderCard = ({
         name={name}
         open={renameDialogState.value}
         onOpenChange={renameDialogState.setValue}
-        onRename={handleRename}
+        onSuccess={onUpdate}
       />
 
       <MoveFolderDialog
@@ -117,6 +113,7 @@ const FolderCard = ({
         open={moveDialogState.value}
         onOpenChange={moveDialogState.setValue}
         dataTree={dataTree}
+        onSuccess={onUpdate}
       />
     </>
   );

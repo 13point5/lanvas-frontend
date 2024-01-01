@@ -56,18 +56,32 @@ const createCourseFolder = (
     parentId: payload.parentFolderId,
   });
 
-type UpdateCourseFolderPayload = {
+type RenameCourseFolderPayload = {
   courseId: number;
   id: number;
   name: string;
 };
 
-const updateCourseFolder = (
-  payload: UpdateCourseFolderPayload,
+const renameCourseFolder = (
+  payload: RenameCourseFolderPayload,
   axiosInstance: AxiosInstance
 ) =>
   axiosInstance.patch(`/courses/${payload.courseId}/folder/${payload.id}`, {
     name: payload.name,
+  });
+
+type MoveCourseFolderPayload = {
+  courseId: number;
+  id: number;
+  parentId: number | null;
+};
+
+const moveCourseFolder = (
+  payload: MoveCourseFolderPayload,
+  axiosInstance: AxiosInstance
+) =>
+  axiosInstance.patch(`/courses/${payload.courseId}/folder/${payload.id}`, {
+    parent_id: payload.parentId,
   });
 
 export const useCoursesApi = () => {
@@ -86,7 +100,9 @@ export const useCoursesApi = () => {
 
     createCourseFolder: (payload: CreateCourseFolderPayload) =>
       createCourseFolder(payload, axiosInstance),
-    updateCourseFolder: (payload: UpdateCourseFolderPayload) =>
-      updateCourseFolder(payload, axiosInstance),
+    renameCourseFolder: (payload: RenameCourseFolderPayload) =>
+      renameCourseFolder(payload, axiosInstance),
+    moveCourseFolder: (payload: MoveCourseFolderPayload) =>
+      moveCourseFolder(payload, axiosInstance),
   };
 };
