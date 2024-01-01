@@ -21,6 +21,7 @@ import { useBoolean } from "@/lib/hooks/useBoolean";
 import RenameFolderDialog from "@/app/course/[id]/components/folder-card/rename-dialog";
 import { CourseFolder } from "@/app/types";
 import MoveFolderDialog from "@/app/course/[id]/components/folder-card/move-dialog";
+import { FoldersAndMaterialsTree } from "@/app/course/[id]/components/materials-tab";
 
 type Props = {
   id: number;
@@ -28,9 +29,17 @@ type Props = {
   name: string;
   onUpdate: (data: CourseFolder) => void;
   onClick: (id: number) => void;
+  dataTree: FoldersAndMaterialsTree;
 };
 
-const FolderCard = ({ id, courseId, name, onUpdate, onClick }: Props) => {
+const FolderCard = ({
+  id,
+  courseId,
+  name,
+  onUpdate,
+  onClick,
+  dataTree,
+}: Props) => {
   const renameDialogState = useBoolean();
 
   const handleRename = (data: CourseFolder) => {
@@ -107,6 +116,7 @@ const FolderCard = ({ id, courseId, name, onUpdate, onClick }: Props) => {
         courseId={courseId}
         open={moveDialogState.value}
         onOpenChange={moveDialogState.setValue}
+        dataTree={dataTree}
       />
     </>
   );

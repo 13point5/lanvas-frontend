@@ -94,23 +94,25 @@ type FoldersById = CourseFolder & {
   materials: number[];
 };
 
+export type FoldersAndMaterialsTree = {
+  foldersById: Map<number, FoldersById>;
+
+  materialsById: Map<
+    number,
+    {
+      id: number;
+      name: string;
+    }
+  >;
+
+  rootFolders: number[];
+};
+
 const getFolderAndMaterialsTree = (
   folders: CourseFolder[],
   materials: CourseMaterial[]
 ) => {
-  const result: {
-    foldersById: Map<number, FoldersById>;
-
-    materialsById: Map<
-      number,
-      {
-        id: number;
-        name: string;
-      }
-    >;
-
-    rootFolders: number[];
-  } = {
+  const result: FoldersAndMaterialsTree = {
     foldersById: new Map(),
     materialsById: new Map(),
     rootFolders: [],
@@ -331,6 +333,7 @@ export default function MaterialsTab({
               name={folder.name}
               onUpdate={onUpdateFolder}
               onClick={handleFolderClick}
+              dataTree={foldersAndMaterialsTree}
             />
           ))}
         </div>
