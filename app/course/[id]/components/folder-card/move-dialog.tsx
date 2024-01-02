@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2Icon } from "lucide-react";
+import { FileIcon, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -44,6 +44,13 @@ const renderNode = (dataTree: FoldersAndMaterialsTree, folderId: number) => {
       }}
     >
       {folder.folders.map((folderId) => renderNode(dataTree, folderId))}
+      {folder.materials.map((materialId) => (
+        <div key={materialId} className="flex items-center gap-2 px-1">
+          <div className="w-4 h-4" />
+          <FileIcon size={16} />
+          <p className="">{dataTree.materialsById.get(materialId)?.name}</p>
+        </div>
+      ))}
     </TreeView.Node>
   );
 };
