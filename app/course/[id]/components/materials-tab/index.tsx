@@ -1,5 +1,6 @@
 "use client";
 
+import FileCard from "@/app/course/[id]/components/file-card";
 import FolderCard from "@/app/course/[id]/components/folder-card";
 import FolderBreadcrumbs from "@/app/course/[id]/components/materials-tab/folder-breadcrumbs";
 import { NewFolderButton } from "@/app/course/[id]/components/materials-tab/new-folder-button";
@@ -236,6 +237,17 @@ export default function MaterialsTab({
     .map((id) => foldersAndMaterialsTree.foldersById.get(id))
     .filter((folder): folder is FoldersById => folder !== undefined);
 
+  const childrenMaterialIds = activeFolderId
+    ? foldersAndMaterialsTree.foldersById.get(activeFolderId)?.materials || []
+    : [];
+
+  const childrenMaterials = childrenMaterialIds
+    .map((id) => foldersAndMaterialsTree.materialsById.get(id))
+    .filter(
+      (material): material is { id: number; name: string } =>
+        material !== undefined
+    );
+
   const handleFolderClick = (id: number) => {
     setFolderPathIds((prev) => [...prev, id]);
   };
@@ -344,6 +356,23 @@ export default function MaterialsTab({
           ))}
         </div>
       </div>
+
+      {childrenMaterials.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h5 className="text-md font-semibold tracking-tight">Files</h5>
+
+          <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+            {childrenMaterials.map((material) => (
+              <FileCard
+                key={material.id}
+                id={material.id}
+                courseId={courseId}
+                name={material.name}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
