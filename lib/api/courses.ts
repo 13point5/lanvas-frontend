@@ -59,6 +59,20 @@ const renameCourseMaterial = (
     name: payload.name,
   });
 
+type MoveCourseMaterialPayload = {
+  courseId: number;
+  id: number;
+  folderId: number;
+};
+
+const moveCourseMaterial = (
+  payload: MoveCourseMaterialPayload,
+  axiosInstance: AxiosInstance
+) =>
+  axiosInstance.patch(`/courses/${payload.courseId}/material/${payload.id}`, {
+    folder_id: payload.folderId,
+  });
+
 type CreateCourseFolderPayload = {
   courseId: number;
   name: string;
@@ -117,6 +131,8 @@ export const useCoursesApi = () => {
       uploadCourseMaterial(payload, axiosInstance),
     renameCourseMaterial: (payload: RenameCourseMaterialPayload) =>
       renameCourseMaterial(payload, axiosInstance),
+    moveCourseMaterial: (payload: MoveCourseMaterialPayload) =>
+      moveCourseMaterial(payload, axiosInstance),
 
     createCourseFolder: (payload: CreateCourseFolderPayload) =>
       createCourseFolder(payload, axiosInstance),

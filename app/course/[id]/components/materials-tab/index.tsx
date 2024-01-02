@@ -373,6 +373,7 @@ export default function MaterialsTab({
                 courseId={courseId}
                 name={material.name}
                 onUpdate={onUpdateMaterial}
+                dataTree={foldersAndMaterialsTree}
               />
             ))}
           </div>

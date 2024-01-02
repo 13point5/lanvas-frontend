@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import RenameDialog from "@/app/course/[id]/components/file-card/rename-dialog";
+import MoveDialog from "@/app/course/[id]/components/file-card/move-dialog";
 import { CourseMaterial } from "@/app/types";
 import { FoldersAndMaterialsTree } from "@/app/course/[id]/components/materials-tab";
 
@@ -27,24 +28,18 @@ type Props = {
   id: number;
   courseId: number;
   name: string;
+  dataTree: FoldersAndMaterialsTree;
   onUpdate: (material: CourseMaterial) => void;
 };
 
-const FileCard = ({ id, courseId, name, onUpdate }: Props) => {
+const FileCard = ({ id, courseId, name, dataTree, onUpdate }: Props) => {
   const renameDialogState = useBoolean();
 
   const moveDialogState = useBoolean();
 
-  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
-  };
-
   return (
     <>
-      <div
-        onClick={handleClick}
-        className="flex gap-4 items-center justify-between px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg cursor-pointer"
-      >
+      <div className="flex gap-4 items-center justify-between px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg">
         <div className="flex gap-4 items-center max-w-[80%]">
           <FileIcon className="text-gray-400" size={18} />
           <p className="text-sm font-medium truncate">{name}</p>
@@ -93,6 +88,15 @@ const FileCard = ({ id, courseId, name, onUpdate }: Props) => {
         name={name}
         open={renameDialogState.value}
         onOpenChange={renameDialogState.setValue}
+        onSuccess={onUpdate}
+      />
+
+      <MoveDialog
+        id={id}
+        courseId={courseId}
+        open={moveDialogState.value}
+        onOpenChange={moveDialogState.setValue}
+        dataTree={dataTree}
         onSuccess={onUpdate}
       />
 
