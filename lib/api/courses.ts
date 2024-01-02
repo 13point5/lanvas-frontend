@@ -32,6 +32,7 @@ const addCourseMembers = (
 
 type UploadCourseMaterialPayload = {
   courseId: number;
+  folderId: number;
   formData: FormData;
 };
 
@@ -39,7 +40,10 @@ const uploadCourseMaterial = (
   payload: UploadCourseMaterialPayload,
   axiosInstance: AxiosInstance
 ) =>
-  axiosInstance.post(`/courses/${payload.courseId}/upload`, payload.formData);
+  axiosInstance.post(
+    `/courses/${payload.courseId}/folder/${payload.folderId}/upload`,
+    payload.formData
+  );
 
 type CreateCourseFolderPayload = {
   courseId: number;

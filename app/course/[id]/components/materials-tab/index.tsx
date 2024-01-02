@@ -251,7 +251,11 @@ export default function MaterialsTab({
   const handleUpload = async (files: File[]) => {
     console.log("files", files);
 
-    if (uploadStatus === FormStatus.Loading) {
+    if (
+      uploadStatus === FormStatus.Loading ||
+      activeFolderId === null ||
+      files.length === 0
+    ) {
       return;
     }
 
@@ -265,6 +269,7 @@ export default function MaterialsTab({
 
           return coursesApi.uploadCourseMaterial({
             courseId,
+            folderId: activeFolderId,
             formData,
           });
         })
@@ -298,6 +303,7 @@ export default function MaterialsTab({
             className="w-fit"
             size="sm"
             onClick={uploadDialogState.on}
+            disabled={activeFolderId === null}
           >
             <UploadIcon className="mr-2 h-4 w-4" />
             Upload Materials
