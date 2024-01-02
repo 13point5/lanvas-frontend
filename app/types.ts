@@ -29,7 +29,7 @@ export type CourseMaterial = {
   id: number;
   course_id: number;
   created_at: string;
-  file_name: string;
+  name: string;
   status: string;
   folder_id: number | null;
 };

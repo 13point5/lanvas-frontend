@@ -58,7 +58,7 @@ const columns: ColumnDef<CourseMaterial>[] = [
     header: "Type",
     accessorKey: "type",
     cell: ({ row }) => {
-      const name: string = row.getValue("file_name");
+      const name: string = row.getValue("name");
       const splits = name.split(".");
       const fileType = splits[splits.length - 1];
 
@@ -73,7 +73,7 @@ const columns: ColumnDef<CourseMaterial>[] = [
       );
     },
   },
-  { header: "Name", accessorKey: "file_name" },
+  { header: "Name", accessorKey: "name" },
   {
     header: "Status",
     accessorKey: "status",
@@ -132,7 +132,7 @@ const getFolderAndMaterialsTree = (
   materials.forEach((material) => {
     result.materialsById.set(material.id, {
       id: material.id,
-      name: material.file_name,
+      name: material.name,
     });
   });
 
@@ -205,6 +205,7 @@ type Props = {
 
   materials: CourseMaterial[];
   onAddMaterials: (data: CourseMaterial[]) => void;
+  onUpdateMaterial: (data: CourseMaterial) => void;
 
   folders: CourseFolder[];
   onAddFolder: (data: CourseFolder) => void;
@@ -213,8 +214,11 @@ type Props = {
 
 export default function MaterialsTab({
   courseId,
+
   materials,
   onAddMaterials,
+  onUpdateMaterial,
+
   folders,
   onAddFolder,
   onUpdateFolder,
@@ -368,6 +372,7 @@ export default function MaterialsTab({
                 id={material.id}
                 courseId={courseId}
                 name={material.name}
+                onUpdate={onUpdateMaterial}
               />
             ))}
           </div>

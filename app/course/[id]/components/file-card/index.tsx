@@ -19,18 +19,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useBoolean } from "@/lib/hooks/useBoolean";
-import RenameFolderDialog from "@/app/course/[id]/components/folder-card/rename-dialog";
-import { CourseFolder } from "@/app/types";
-import MoveFolderDialog from "@/app/course/[id]/components/folder-card/move-dialog";
+import RenameDialog from "@/app/course/[id]/components/file-card/rename-dialog";
+import { CourseMaterial } from "@/app/types";
 import { FoldersAndMaterialsTree } from "@/app/course/[id]/components/materials-tab";
 
 type Props = {
   id: number;
   courseId: number;
   name: string;
+  onUpdate: (material: CourseMaterial) => void;
 };
 
-const FileCard = ({ id, courseId, name }: Props) => {
+const FileCard = ({ id, courseId, name, onUpdate }: Props) => {
   const renameDialogState = useBoolean();
 
   const moveDialogState = useBoolean();
@@ -86,6 +86,15 @@ const FileCard = ({ id, courseId, name }: Props) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <RenameDialog
+        id={id}
+        courseId={courseId}
+        name={name}
+        open={renameDialogState.value}
+        onOpenChange={renameDialogState.setValue}
+        onSuccess={onUpdate}
+      />
 
       {/* <RenameFolderDialog
         id={id}

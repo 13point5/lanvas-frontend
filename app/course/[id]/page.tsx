@@ -127,6 +127,25 @@ export default function CoursePage({ params: { id } }: Props) {
     });
   };
 
+  const handleUpdateCourseMaterial = (material: CourseMaterial) => {
+    setCourseData((prev) => {
+      if (!prev.data) return prev;
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          course_materials: prev.data.course_materials.map((m) => {
+            if (m.id === material.id) {
+              return material;
+            }
+            return m;
+          }),
+        },
+      };
+    });
+  };
+
   const handleAddCourseFolder = (folder: CourseFolder) => {
     setCourseData((prev) => {
       if (!prev.data) return prev;
@@ -210,6 +229,7 @@ export default function CoursePage({ params: { id } }: Props) {
             courseId={id}
             materials={course.course_materials}
             onAddMaterials={handleAddCourseMaterials}
+            onUpdateMaterial={handleUpdateCourseMaterial}
             folders={course.course_folders}
             onAddFolder={handleAddCourseFolder}
             onUpdateFolder={handleUpdateFolder}
