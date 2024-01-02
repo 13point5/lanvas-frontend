@@ -9,17 +9,27 @@ import { ReactNode, useContext, useReducer } from "react";
 import { actions, reducer } from "@/components/tree-view/reducer";
 import { TreeViewContext } from "@/components/tree-view/context";
 
-type NodeType = {
-  id: string | number;
-  label: string;
-};
+const PlaceholderIcon = () => <div className="w-4 h-4" />;
 
 type NodeProps = {
-  node: NodeType;
-  children: ReactNode | ReactNode[];
+  id: string | number;
+  label: string;
+  icons?: {
+    open: ReactNode;
+    close: ReactNode;
+  };
+  disableSelect?: boolean;
+
+  children?: ReactNode | ReactNode[];
 };
 
-export const Node = ({ node: { id, label }, children }: NodeProps) => {
+export const Node = ({
+  id,
+  label,
+  children,
+  icons,
+  disableSelect = false,
+}: NodeProps) => {
   const { open, dispatch, selectedNodeId, selectNode } =
     useContext(TreeViewContext);
   const isOpen = open.get(id);
@@ -33,16 +43,36 @@ export const Node = ({ node: { id, label }, children }: NodeProps) => {
         )}
         onClick={() => {
           dispatch(actions.toggle(id));
-          selectNode(id);
+          !disableSelect && selectNode(id);
         }}
       >
-        {isOpen ? (
-          <ChevronDownIcon size={16} />
+        {children ? (
+          isOpen ? (
+            <ChevronDownIcon size={16} />
+          ) : (
+            <ChevronRightIcon size={16} />
+          )
         ) : (
-          <ChevronRightIcon size={16} />
+          <PlaceholderIcon />
         )}
 
-        {isOpen ? <FolderOpenIcon size={16} /> : <FolderIcon size={16} />}
+        {children ? (
+          isOpen ? (
+            !icons ? (
+              <FolderOpenIcon size={16} />
+            ) : (
+              icons.open
+            )
+          ) : !icons ? (
+            <FolderIcon size={16} />
+          ) : (
+            icons.close
+          )
+        ) : !icons ? (
+          <PlaceholderIcon />
+        ) : (
+          icons.open // TODO: FIX THIS, it's so bleh
+        )}
 
         <span>{label}</span>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { CourseFolder, CourseMaterial, FormStatus } from "@/app/types";
+import { CourseMaterial, FormStatus } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,18 +10,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { FileIcon, Loader2Icon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+  FileIcon,
+  FolderIcon,
+  FolderOpenIcon,
+  Loader2Icon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useCoursesApi } from "@/lib/api/courses";
 import { FoldersAndMaterialsTree } from "@/app/course/[id]/components/materials-tab";
@@ -33,23 +26,21 @@ const renderNode = (dataTree: FoldersAndMaterialsTree, folderId: number) => {
     return null;
   }
 
-  console.log("folder", folder);
-
   return (
-    <TreeView.Node
-      key={folderId}
-      node={{
-        id: folderId,
-        label: folder.name,
-      }}
-    >
+    <TreeView.Node key={folderId} id={folderId} label={folder.name}>
       {folder.folders.map((folderId) => renderNode(dataTree, folderId))}
+
       {folder.materials.map((materialId) => (
-        <div key={materialId} className="flex items-center gap-2 px-1">
-          <div className="w-4 h-4" />
-          <FileIcon size={16} />
-          <p className="">{dataTree.materialsById.get(materialId)?.name}</p>
-        </div>
+        <TreeView.Node
+          key={materialId}
+          id={materialId}
+          label={dataTree.materialsById.get(materialId)?.name || ""}
+          disableSelect
+          icons={{
+            open: <FileIcon size={16} />,
+            close: <FileIcon size={16} />,
+          }}
+        />
       ))}
     </TreeView.Node>
   );
