@@ -41,7 +41,7 @@ const FileCard = ({ id, courseId, name, dataTree, onUpdate }: Props) => {
     <>
       <div className="flex gap-4 items-center justify-between px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg">
         <div className="flex gap-4 items-center max-w-[80%]">
-          <FileIcon className="text-gray-400" size={18} />
+          <FileIcon className="text-gray-400 w-5 h-5" />
           <p className="text-sm font-medium truncate">{name}</p>
         </div>
 
