@@ -116,6 +116,16 @@ const moveCourseFolder = (
     parent_id: payload.parentId,
   });
 
+type DummyChatPayload = {
+  courseId: number;
+  body: {
+    message: string;
+  };
+};
+
+const dummyChat = (payload: DummyChatPayload, axiosInstance: AxiosInstance) =>
+  axiosInstance.post(`/courses/${payload.courseId}/chat`, payload.body);
+
 export const useCoursesApi = () => {
   const { axiosInstance } = useAxios();
 
@@ -140,5 +150,7 @@ export const useCoursesApi = () => {
       renameCourseFolder(payload, axiosInstance),
     moveCourseFolder: (payload: MoveCourseFolderPayload) =>
       moveCourseFolder(payload, axiosInstance),
+
+    dummyChat: (payload: DummyChatPayload) => dummyChat(payload, axiosInstance),
   };
 };

@@ -243,7 +243,7 @@ export default function CoursePage({ params: { id } }: Props) {
           />
         )}
 
-        {activeTab === "chat" && <ChatTab />}
+        {activeTab === "chat" && <ChatTab courseId={id} />}
       </div>
     </main>
   );

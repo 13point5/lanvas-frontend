@@ -3,6 +3,7 @@ import { ChatMessage } from "@/components/chat-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useCoursesApi } from "@/lib/api/courses";
 import { Loader2Icon, SendIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -19,8 +20,14 @@ const messages: Message[] = [
   },
 ];
 
-const ChatTab = () => {
+type Props = {
+  courseId: number;
+};
+
+const ChatTab = ({ courseId }: Props) => {
   const isLoading = false;
+
+  const { dummyChat } = useCoursesApi();
 
   const [input, setInput] = useState("");
 
@@ -30,11 +37,19 @@ const ChatTab = () => {
 
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
+
+    const res = await dummyChat({
+      courseId,
+      body: {
+        message: input,
+      },
+    });
+    console.log("res", res);
   };
 
   return (
-    <div className="h-full w-full flex flex-col gap-0 overflow-hidden p-2">
-      <div className="grow overflow-auto w-full h-full">
+    <div className="w-full flex flex-col gap-0 overflow-hidden p-2">
+      <div className="overflow-auto w-full">
         {messages.map(
           (message, index) =>
             message.role !== Role.system && (
