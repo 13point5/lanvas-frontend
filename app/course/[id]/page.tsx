@@ -12,8 +12,12 @@ import { Button } from "@/components/ui/button";
 import { ChevronRightIcon, HomeIcon, SlashIcon, UserIcon } from "lucide-react";
 import { UserMenu } from "@/app/dashboard/components/user-menu";
 
-import StudentsTab from "@/app/course/[id]/components/students-tab";
 import { useCoursesApi } from "@/lib/api/courses";
+import { useCourseFoldersApi } from "@/lib/api/courseFolders";
+import { useCourseMaterialsApi } from "@/lib/api/courseMaterials";
+import { useCourseMembersApi } from "@/lib/api/courseMembers";
+
+import StudentsTab from "@/app/course/[id]/components/students-tab";
 import {
   Course,
   CourseFolder,
@@ -24,7 +28,6 @@ import {
 import { useEffect, useState } from "react";
 import MaterialsTab from "@/app/course/[id]/components/materials-tab";
 import ChatTab from "@/app/course/[id]/components/chat-tab";
-import { usePathname } from "next/navigation";
 
 type CourseDataState =
   | {
@@ -60,6 +63,9 @@ export default function CoursePage({ params: { id } }: Props) {
   const [activeTab, setActiveTab] = useState("materials");
 
   const { getCourse } = useCoursesApi();
+  const { getCourseFolders } = useCourseFoldersApi();
+  const { getCourseMaterials } = useCourseMaterialsApi();
+  const { getCourseMembers } = useCourseMembersApi();
 
   const [courseData, setCourseData] = useState<CourseDataState>({
     status: FormStatus.Idle,
@@ -79,10 +85,22 @@ export default function CoursePage({ params: { id } }: Props) {
     });
 
     try {
-      const res = await getCourse({ id });
+      const courseResp = await getCourse({ id });
+
+      const [foldersResp, materialsResp, membersResp] = await Promise.all([
+        getCourseFolders({ courseId: id }),
+        getCourseMaterials({ courseId: id }),
+        getCourseMembers({ courseId: id }),
+      ]);
+
       setCourseData({
         status: FormStatus.Success,
-        data: res.data,
+        data: {
+          ...courseResp.data,
+          course_folders: foldersResp.data,
+          course_materials: materialsResp.data,
+          course_members: membersResp.data,
+        },
         error: null,
       });
     } catch (error) {
