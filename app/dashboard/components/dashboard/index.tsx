@@ -1,12 +1,6 @@
 "use client";
 
-import { Database } from "@/app/supabase.types";
-import { Button } from "@/components/ui/button";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { PlusIcon } from "lucide-react";
-import { cookies } from "next/headers";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { sampleCourses } from "@/app/dashboard/sample-data/courses";
 import { CoursePreviewCard } from "@/app/dashboard/components/course-preview-card";
 import { NewCourseButton } from "@/app/dashboard/components/new-course-button";
 import * as R from "ramda";

@@ -24,7 +24,7 @@ import { CourseFolder, FormStatus } from "@/app/types";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useBoolean } from "@/lib/hooks/useBoolean";
-import { useCoursesApi } from "@/lib/api/courses";
+import { useCourseFoldersApi } from "@/lib/api/courseFolders";
 
 const formSchema = z.object({
   name: z.string(),
@@ -43,7 +43,7 @@ export const NewFolderButton = ({
 }: Props) => {
   const dialogState = useBoolean();
 
-  const { createCourseFolder } = useCoursesApi();
+  const { createCourseFolder } = useCourseFoldersApi();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

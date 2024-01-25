@@ -4,9 +4,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { PlusIcon } from "lucide-react";
 import { cookies } from "next/headers";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { sampleCourses } from "@/app/dashboard/sample-data/courses";
 import { CoursePreviewCard } from "@/app/dashboard/components/course-preview-card";
-import { NewCourseButton } from "@/app/dashboard/components/new-course-button";
 import { redirect } from "next/navigation";
 import { Dashboard } from "@/app/dashboard/components/dashboard";
 
@@ -33,7 +31,12 @@ const DashboardPage = async () => {
     `
     )
     .eq("email", user.email);
-  console.log("data", data);
+
+  if (data.data) {
+    for (const item of data.data) {
+      console.log("item", item.courses);
+    }
+  }
 
   if (data.error) {
     return <div>Error</div>;

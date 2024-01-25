@@ -1,14 +1,11 @@
 "use client";
 
-import { Database } from "@/app/supabase.types";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import { Button } from "@/components/ui/button";
 import InviteStudentsDialog from "@/app/course/[id]/components/students-tab/invite-students-dialog";
-import { useCoursesApi } from "@/lib/api/courses";
+import { useCourseMembersApi } from "@/lib/api/courseMembers";
 import { DataTable } from "@/components/data-table";
 import { PlusIcon } from "lucide-react";
 import { CourseMember } from "@/app/types";
@@ -29,12 +26,12 @@ export default function StudentsTab({ members, onUpdateMembers }: Props) {
 
   const students = members.filter((member) => member.role === "student");
 
-  const coursesApi = useCoursesApi();
+  const { addCourseMembers } = useCourseMembersApi();
 
   const inviteStudentsDialogState = useBoolean();
 
   const handleInviteStudents = async (emails: string[]) => {
-    const res = await coursesApi.addCourseMembers({
+    const res = await addCourseMembers({
       courseId,
       members: emails.map((email) => ({ email, role: "student" })),
     });

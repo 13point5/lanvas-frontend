@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useState } from "react";
-import { useCoursesApi } from "@/lib/api/courses";
+import { useCourseMaterialsApi } from "@/lib/api/courseMaterials";
 
 const formSchema = z.object({
   name: z.string(),
@@ -55,7 +55,7 @@ const RenameMaterialDialog = ({
 
   const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Idle);
 
-  const { renameCourseMaterial } = useCoursesApi();
+  const { renameCourseMaterial } = useCourseMaterialsApi();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("values", values);

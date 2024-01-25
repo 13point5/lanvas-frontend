@@ -98,14 +98,16 @@ const FolderCard = ({
         </DropdownMenu>
       </div>
 
-      <RenameFolderDialog
-        id={id}
-        courseId={courseId}
-        name={name}
-        open={renameDialogState.value}
-        onOpenChange={renameDialogState.setValue}
-        onSuccess={onUpdate}
-      />
+      {renameDialogState.value && (
+        <RenameFolderDialog
+          id={id}
+          courseId={courseId}
+          name={name}
+          open={renameDialogState.value}
+          onOpenChange={renameDialogState.setValue}
+          onSuccess={onUpdate}
+        />
+      )}
 
       <MoveFolderDialog
         id={id}

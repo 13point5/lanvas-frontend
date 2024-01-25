@@ -9,86 +9,11 @@ import { CourseFolder, CourseMaterial, FormStatus } from "@/app/types";
 import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useCoursesApi } from "@/lib/api/courses";
+import { useCourseMaterialsApi } from "@/lib/api/courseMaterials";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import { ColumnDef } from "@tanstack/react-table";
 import { FolderPlusIcon, LinkIcon, PlusIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
-
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case "uploading":
-      return "Uploading";
-    case "processing":
-      return "Processing";
-    case "ready":
-      return "Ready";
-    default:
-      return "Unknown";
-  }
-};
-
-const getStatusClass = (status: string) => {
-  switch (status) {
-    case "uploading":
-      return "bg-yellow-100 hover:bg-yellow-100 text-yellow-800";
-    case "processing":
-      return "bg-blue-100 text-blue-800 hover:bg-blue-100";
-    case "ready":
-      return "bg-green-100 text-green-800 hover:bg-green-100";
-    default:
-      return "bg-gray-100 text-gray-800 hover:bg-gray-100";
-  }
-};
-
-const getFileTypeClass = (fileType: string) => {
-  switch (fileType) {
-    case "pdf":
-      return "bg-red-100 text-red-500";
-    case "doc":
-      return "bg-blue-100 text-blue-500";
-    case "txt":
-    default:
-      return "bg-gray-100 text-gray-500";
-  }
-};
-
-const columns: ColumnDef<CourseMaterial>[] = [
-  {
-    header: "Type",
-    accessorKey: "type",
-    cell: ({ row }) => {
-      const name: string = row.getValue("name");
-      const splits = name.split(".");
-      const fileType = splits[splits.length - 1];
-
-      return (
-        <p
-          className={`${getFileTypeClass(
-            fileType
-          )} bg-transparent hover:bg-transparent text-xs font-medium`}
-        >
-          {fileType.toUpperCase()}
-        </p>
-      );
-    },
-  },
-  { header: "Name", accessorKey: "name" },
-  {
-    header: "Status",
-    accessorKey: "status",
-    cell: ({ row }) => {
-      const status: string = row.getValue("status");
-
-      return (
-        <Badge className={`${getStatusClass(status)}`}>
-          {getStatusLabel(status)}
-        </Badge>
-      );
-    },
-  },
-  { header: "Date Created", accessorKey: "created_at" },
-];
 
 type FoldersById = CourseFolder & {
   folders: number[];
@@ -262,7 +187,7 @@ export default function MaterialsTab({
     );
   };
 
-  const coursesApi = useCoursesApi();
+  const { uploadCourseMaterial } = useCourseMaterialsApi();
 
   const handleUpload = async (files: File[]) => {
     console.log("files", files);
@@ -283,10 +208,10 @@ export default function MaterialsTab({
           const formData = new FormData();
           formData.append("uploadFile", file);
 
-          return coursesApi.uploadCourseMaterial({
+          return uploadCourseMaterial({
             courseId,
             folderId: activeFolderId,
-            formData,
+            file,
           });
         })
       );

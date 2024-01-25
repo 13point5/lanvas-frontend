@@ -82,14 +82,16 @@ const FileCard = ({ id, courseId, name, dataTree, onUpdate }: Props) => {
         </DropdownMenu>
       </div>
 
-      <RenameDialog
-        id={id}
-        courseId={courseId}
-        name={name}
-        open={renameDialogState.value}
-        onOpenChange={renameDialogState.setValue}
-        onSuccess={onUpdate}
-      />
+      {renameDialogState.value && (
+        <RenameDialog
+          id={id}
+          courseId={courseId}
+          name={name}
+          open={renameDialogState.value}
+          onOpenChange={renameDialogState.setValue}
+          onSuccess={onUpdate}
+        />
+      )}
 
       <MoveDialog
         id={id}

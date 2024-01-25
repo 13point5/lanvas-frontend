@@ -16,7 +16,7 @@ import {
   Loader2Icon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCoursesApi } from "@/lib/api/courses";
+import { useCourseMaterialsApi } from "@/lib/api/courseMaterials";
 import { FoldersAndMaterialsTree } from "@/app/course/[id]/components/materials-tab";
 import * as TreeView from "@/components/tree-view";
 
@@ -71,7 +71,7 @@ const MoveFileDialog = ({
     null
   );
 
-  const { moveCourseMaterial } = useCoursesApi();
+  const { moveCourseMaterial } = useCourseMaterialsApi();
 
   const handleMoveMaterial = async () => {
     if (formStatus === FormStatus.Loading) {
