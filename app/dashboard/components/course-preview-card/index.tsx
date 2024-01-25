@@ -1,8 +1,10 @@
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 type Props = {
   id: number;
   title: string;
+  role: string;
 };
 
 const colors = [
@@ -19,17 +21,20 @@ const colors = [
   "bg-rose-400",
 ];
 
-export const CoursePreviewCard = ({ id, title }: Props) => {
+export const CoursePreviewCard = ({ id, title, role }: Props) => {
   // choose random color from colors
   const color = colors[Math.floor(Math.random() * colors.length)];
 
   return (
     <Link href={`/course/${id}`}>
       <div className="bg-white flex flex-col rounded-md shadow-md w-[300px] h-[250px] hover:scale-105">
+        {/* <div className="bg-white flex flex-col rounded-md shadow-md max-w-[300px] h-[250px] hover:scale-105"> */}
         <div className={`w-full h-[60%] ${color} rounded-t-md`}></div>
 
-        <div className="px-4 py-2">
+        <div className="px-4 py-2 flex w-full justify-between">
           <p className="text-lg font-normal text-wrap truncate">{title}</p>
+
+          <Badge variant="secondary">{role}</Badge>
         </div>
       </div>
     </Link>

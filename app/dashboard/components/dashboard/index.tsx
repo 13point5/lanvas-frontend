@@ -48,6 +48,7 @@ export const Dashboard = ({ courses }: Props) => {
                 key={course.id}
                 id={course.id}
                 title={course.title}
+                role="Student"
               />
             ))}
           </div>
@@ -60,6 +61,7 @@ export const Dashboard = ({ courses }: Props) => {
                 key={course.id}
                 id={course.id}
                 title={course.title}
+                role="Teacher"
               />
             ))}
           </div>

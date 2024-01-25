@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { SupabaseProvider } from "@/lib/contexts/SupabaseProvider";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Toaster } from "react-hot-toast";
+import ReactQueryProvider from "@/components/react-query-provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,7 +28,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SupabaseProvider session={session}>{children}</SupabaseProvider>
+        <SupabaseProvider session={session}>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </SupabaseProvider>
 
         <Toaster />
       </body>

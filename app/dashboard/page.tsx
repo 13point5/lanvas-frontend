@@ -1,64 +1,43 @@
-import { Database } from "@/app/supabase.types";
-import { Button } from "@/components/ui/button";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { PlusIcon } from "lucide-react";
-import { cookies } from "next/headers";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+"use client";
+
+import { useCoursesApi } from "@/lib/api/courses";
+import { useQuery } from "@tanstack/react-query";
 import { CoursePreviewCard } from "@/app/dashboard/components/course-preview-card";
-import { redirect } from "next/navigation";
-import { Dashboard } from "@/app/dashboard/components/dashboard";
 
-const DashboardPage = async () => {
-  const supabase = createServerComponentClient<Database>({ cookies });
+const DashboardPage = () => {
+  const { getUserCourses } = useCoursesApi();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ["userCourses"],
+    queryFn: getUserCourses,
+  });
 
-  if (!user || !user.email) {
-    redirect("/");
+  console.log("data", data);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
   }
 
-  const data = await supabase
-    .from("course_members")
-    .select(
-      `
-      role,
-      courses (
-        id,
-        title
-      )
-    `
-    )
-    .eq("email", user.email);
-
-  if (data.data) {
-    for (const item of data.data) {
-      console.log("item", item.courses);
-    }
+  if (!data || isError) {
+    return <p>Error</p>;
   }
 
-  if (data.error) {
-    return <div>Error</div>;
-  }
+  return (
+    <div className="w-full px-6 py-8 flex flex-col gap-5">
+      <h2 className="text-3xl font-bold tracking-tight">Courses</h2>
 
-  const filteredCourses = data.data.filter(
-    (item) => item.courses && item.courses?.id && item.courses?.title
-  ) as Array<{
-    role: string;
-    courses: {
-      id: number;
-      title: string;
-    };
-  }>;
-
-  const courses = filteredCourses.map((item) => ({
-    id: item.courses.id,
-    title: item.courses.title,
-    role: item.role,
-  }));
-
-  return <Dashboard courses={courses} />;
+      <div className="flex gap-6 flex-wrap">
+        {data.data.map(({ role, course }) => (
+          <CoursePreviewCard
+            key={course.id}
+            id={course.id}
+            title={course.title}
+            role={role}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default DashboardPage;
