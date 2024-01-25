@@ -24,7 +24,11 @@ import { CourseMemberRole } from "@/app/types";
 import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { useBoolean } from "@/lib/hooks/useBoolean";
-import { UserCourse, useCoursesApi } from "@/lib/api/courses";
+import {
+  UserCourse,
+  useCoursesApi,
+  useCoursesMutation,
+} from "@/lib/api/courses";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
@@ -34,28 +38,7 @@ const formSchema = z.object({
 export const NewCourseButton = () => {
   const dialogState = useBoolean();
 
-  const { createCourse } = useCoursesApi();
-
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: createCourse,
-    onSuccess: (data) => {
-      queryClient.setQueryData<UserCourse[]>(
-        ["userCourses"],
-        (oldData = []) => {
-          const newUserCourse = {
-            role: CourseMemberRole.teacher,
-            course: data.data,
-          };
-
-          if (!oldData) return [newUserCourse];
-
-          return [...oldData, newUserCourse];
-        }
-      );
-    },
-  });
+  const mutation = useCoursesMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

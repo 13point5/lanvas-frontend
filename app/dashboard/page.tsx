@@ -1,19 +1,11 @@
 "use client";
 
-import { useCoursesApi } from "@/lib/api/courses";
-import { useQuery } from "@tanstack/react-query";
+import { useCoursesQuery } from "@/lib/api/courses";
 import { CoursePreviewCard } from "@/app/dashboard/components/course-preview-card";
 import { NewCourseButton } from "@/app/dashboard/components/new-course-button";
 
 const DashboardPage = () => {
-  const { getUserCourses } = useCoursesApi();
-
-  const { isLoading, isError, data } = useQuery({
-    queryKey: ["userCourses"],
-    queryFn: getUserCourses,
-  });
-
-  console.log("data", data);
+  const { isLoading, isError, data } = useCoursesQuery();
 
   if (isLoading) {
     return <p>Loading...</p>;
