@@ -4,6 +4,26 @@ import { Database } from "@/app/supabase.types";
 import { CourseMemberRole } from "@/app/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+type Course = Database["public"]["Tables"]["courses"]["Row"];
+
+type GetCoursePayload = {
+  id: number;
+};
+
+const getCourse = (
+  payload: GetCoursePayload,
+  axiosInstance: AxiosInstance
+): Promise<Course> =>
+  axiosInstance.get(`/courses/${payload.id}`).then((res) => res.data);
+
+export type UserCourse = {
+  role: CourseMemberRole;
+  course: Course;
+};
+
+const getUserCourses = (axiosInstance: AxiosInstance): Promise<UserCourse[]> =>
+  axiosInstance.get("/courses").then((res) => res.data);
+
 type CreateCoursePayload = {
   title: string;
 };
@@ -12,21 +32,6 @@ const createCourse = (
   payload: CreateCoursePayload,
   axiosInstance: AxiosInstance
 ) => axiosInstance.post("/courses", payload);
-
-type GetCoursePayload = {
-  id: number;
-};
-
-const getCourse = (payload: GetCoursePayload, axiosInstance: AxiosInstance) =>
-  axiosInstance.get(`/courses/${payload.id}`);
-
-export type UserCourse = {
-  role: CourseMemberRole;
-  course: Database["public"]["Tables"]["courses"]["Row"];
-};
-
-const getUserCourses = (axiosInstance: AxiosInstance): Promise<UserCourse[]> =>
-  axiosInstance.get("/courses").then((res) => res.data);
 
 type DummyChatPayload = {
   courseId: number;
@@ -49,6 +54,17 @@ export const useCoursesApi = () => {
 
     dummyChat: (payload: DummyChatPayload) => dummyChat(payload, axiosInstance),
   };
+};
+
+const getCourseKey = (id: number) => ["course", id];
+
+export const useCourseQuery = (id: number) => {
+  const { getCourse } = useCoursesApi();
+
+  return useQuery({
+    queryKey: getCourseKey(id),
+    queryFn: () => getCourse({ id }),
+  });
 };
 
 const USER_COURSES_QUERY_KEY = ["userCourses"];

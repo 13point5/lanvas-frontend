@@ -96,7 +96,7 @@ export default function CoursePage({ params: { id } }: Props) {
       setCourseData({
         status: FormStatus.Success,
         data: {
-          ...courseResp.data,
+          ...courseResp,
           course_folders: foldersResp.data,
           course_materials: materialsResp.data,
           course_members: membersResp.data,
