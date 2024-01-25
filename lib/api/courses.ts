@@ -1,6 +1,7 @@
 import { useAxios } from "@/lib/hooks/useAxios";
 import { AxiosInstance } from "axios";
 import { Database } from "@/app/supabase.types";
+import { CourseMemberRole } from "@/app/types";
 
 type CreateCoursePayload = {
   title: string;
@@ -18,13 +19,13 @@ type GetCoursePayload = {
 const getCourse = (payload: GetCoursePayload, axiosInstance: AxiosInstance) =>
   axiosInstance.get(`/courses/${payload.id}`);
 
-type UserCourse = {
-  role: "teacher" | "student";
+export type UserCourse = {
+  role: CourseMemberRole;
   course: Database["public"]["Tables"]["courses"]["Row"];
 };
 
-const getUserCourses = (axiosInstance: AxiosInstance) =>
-  axiosInstance.get<UserCourse[]>("/courses");
+const getUserCourses = (axiosInstance: AxiosInstance): Promise<UserCourse[]> =>
+  axiosInstance.get("/courses").then((res) => res.data);
 
 type DummyChatPayload = {
   courseId: number;

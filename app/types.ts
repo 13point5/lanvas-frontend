@@ -17,12 +17,17 @@ export enum FormStatus {
   Success,
 }
 
+export enum CourseMemberRole {
+  teacher = "teacher",
+  student = "student",
+}
+
 export type CourseMember = {
   id: number;
   email: string;
   created_at: string;
   course_id: number;
-  role: string;
+  role: CourseMemberRole;
 };
 
 export type CourseMaterial = {

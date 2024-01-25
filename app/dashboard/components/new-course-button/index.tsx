@@ -20,11 +20,12 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { FormStatus } from "@/app/types";
-import { useEffect, useState } from "react";
+import { CourseMemberRole } from "@/app/types";
+import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { useBoolean } from "@/lib/hooks/useBoolean";
-import { useCoursesApi } from "@/lib/api/courses";
+import { UserCourse, useCoursesApi } from "@/lib/api/courses";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   title: z.string(),
@@ -35,6 +36,27 @@ export const NewCourseButton = () => {
 
   const { createCourse } = useCoursesApi();
 
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: createCourse,
+    onSuccess: (data) => {
+      queryClient.setQueryData<UserCourse[]>(
+        ["userCourses"],
+        (oldData = []) => {
+          const newUserCourse = {
+            role: CourseMemberRole.teacher,
+            course: data.data,
+          };
+
+          if (!oldData) return [newUserCourse];
+
+          return [...oldData, newUserCourse];
+        }
+      );
+    },
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,28 +64,14 @@ export const NewCourseButton = () => {
     },
   });
 
-  const [formStatus, setFormStatus] = useState<FormStatus>(FormStatus.Idle);
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("values", values);
-
-    setFormStatus(FormStatus.Loading);
-
-    try {
-      const res = await createCourse(values);
-      console.log("res", res);
-      dialogState.off();
-      setFormStatus(FormStatus.Success);
-    } catch (error) {
-      console.error(error);
-      setFormStatus(FormStatus.Error);
-    }
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    mutation.mutate(values);
+    dialogState.off();
   };
 
   useEffect(() => {
     if (!dialogState.value) {
       form.reset();
-      setFormStatus(FormStatus.Idle);
     }
   }, [form, dialogState.value]);
 
@@ -98,7 +106,7 @@ export const NewCourseButton = () => {
 
               <DialogFooter>
                 <Button type="submit">
-                  {formStatus === FormStatus.Loading ? (
+                  {mutation.isPending ? (
                     <>
                       <Loader2Icon className="animate-spin mr-2 h-4 w-4" />
                       Creating...
