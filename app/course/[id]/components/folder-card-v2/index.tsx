@@ -1,3 +1,4 @@
+import RenameFolderDialog from "@/app/course/[id]/components/folder-card-v2/rename-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -5,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useBoolean } from "@/lib/hooks/useBoolean";
 import {
   FolderIcon,
   FolderSymlinkIcon,
@@ -20,6 +22,8 @@ type Props = {
 };
 
 const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
+  const renameDialogState = useBoolean();
+
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
 
@@ -54,7 +58,7 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                // renameDialogState.on();
+                renameDialogState.on();
               }}
             >
               <PencilIcon className="mr-4" size={14} /> Rename
@@ -73,6 +77,16 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {renameDialogState.value && (
+        <RenameFolderDialog
+          id={id}
+          courseId={courseId}
+          name={name}
+          open={renameDialogState.value}
+          onOpenChange={renameDialogState.setValue}
+        />
+      )}
     </>
   );
 };

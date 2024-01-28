@@ -32,3 +32,25 @@ export const useCreateCourseFolderMutation = () => {
     },
   });
 };
+
+export const useRenameCourseFolderMutation = () => {
+  const { renameCourseFolder } = useCourseFoldersApi();
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: renameCourseFolder,
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData<CourseFolder[]>(
+        getCourseFolderKey(variables.courseId),
+        (oldData = []) => {
+          if (!oldData) return [data.data];
+
+          return oldData.map((folder) =>
+            folder.id === variables.id ? data.data : folder
+          );
+        }
+      );
+    },
+  });
+};
