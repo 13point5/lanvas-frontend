@@ -1,5 +1,9 @@
+import { Database } from "@/app/supabase.types";
 import { useAxios } from "@/lib/hooks/useAxios";
 import { AxiosInstance } from "axios";
+
+export type CourseFolder =
+  Database["public"]["Tables"]["course_folders"]["Row"];
 
 type GetCourseFoldersPayload = {
   courseId: number;
@@ -8,7 +12,10 @@ type GetCourseFoldersPayload = {
 const getCourseFolders = (
   payload: GetCourseFoldersPayload,
   axiosInstance: AxiosInstance
-) => axiosInstance.get(`/courses/${payload.courseId}/folders`);
+): Promise<CourseFolder[]> =>
+  axiosInstance
+    .get(`/courses/${payload.courseId}/folders`)
+    .then((res) => res.data);
 
 type CreateCourseFolderPayload = {
   courseId: number;

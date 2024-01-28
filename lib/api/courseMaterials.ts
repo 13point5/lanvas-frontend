@@ -1,5 +1,8 @@
+import { Database } from "@/app/supabase.types";
 import { useAxios } from "@/lib/hooks/useAxios";
 import { AxiosInstance } from "axios";
+
+type CourseMaterial = Database["public"]["Tables"]["course_materials"]["Row"];
 
 type GetCourseMaterialsPayload = {
   courseId: number;
@@ -8,7 +11,10 @@ type GetCourseMaterialsPayload = {
 const getCourseMaterials = (
   payload: GetCourseMaterialsPayload,
   axiosInstance: AxiosInstance
-) => axiosInstance.get(`/courses/${payload.courseId}/materials`);
+): Promise<CourseMaterial[]> =>
+  axiosInstance
+    .get(`/courses/${payload.courseId}/materials`)
+    .then((res) => res.data);
 
 type RenameCourseMaterialPayload = {
   courseId: number;

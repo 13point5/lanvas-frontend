@@ -51,7 +51,7 @@ export type Course = {
   id: number;
   created_at: string;
   title: string;
-  course_members: CourseMember[];
-  course_folders: CourseFolder[];
-  course_materials: CourseMaterial[];
+  // course_members: CourseMember[];
+  // course_folders: CourseFolder[];
+  // course_materials: CourseMaterial[];
 };

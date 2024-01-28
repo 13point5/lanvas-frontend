@@ -11,8 +11,11 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs-v2";
 import { useState } from "react";
-import { useCourseQuery } from "@/lib/api/courses";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCourseQuery } from "@/lib/hooks/api/courses";
+import { CourseMemberRole } from "@/app/types";
+import StudentView from "@/app/course/[id]/components/student-view";
+import TeacherView from "@/app/course/[id]/components/teacher-view";
 
 type Props = {
   params: {
@@ -25,49 +28,19 @@ const CoursePage = ({ params: { id } }: Props) => {
 
   const courseQuery = useCourseQuery(id);
 
-  return (
-    <main className="h-screen">
-      <div className="flex flex-col gap-2 pt-4 px-6 border-b">
-        <div className="flex items-center justify-between">
-          <div className="flex gap-2 items-center">
-            <Link href="/">
-              <HomeIcon size={20} />
-            </Link>
+  if (courseQuery.isPending) {
+    return <p>loading...</p>;
+  }
 
-            <ChevronRightIcon size={20} />
+  if (courseQuery.isError) {
+    return <p>error</p>;
+  }
 
-            <Link href={`/course/${id}`}>
-              {courseQuery.isPending && (
-                <Skeleton className="h-[28px] w-[100px]" />
-              )}
+  if (courseQuery.data.role === CourseMemberRole.student) {
+    return <StudentView />;
+  }
 
-              {courseQuery.error && (
-                <p className="scroll-m-20 text-xl font-semibold tracking-tight text-red-500">
-                  Error
-                </p>
-              )}
-
-              {courseQuery.data && (
-                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                  {courseQuery.data.title}
-                </h4>
-              )}
-            </Link>
-          </div>
-
-          <UserMenu />
-        </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="">
-            <TabsTrigger value="materials">Materials</TabsTrigger>
-            <TabsTrigger value="students">Students</TabsTrigger>
-            <TabsTrigger value="chat">Chat</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-    </main>
-  );
+  return <TeacherView course={courseQuery.data.course} />;
 };
 
 export default CoursePage;

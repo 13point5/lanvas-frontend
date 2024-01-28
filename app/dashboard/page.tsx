@@ -1,8 +1,8 @@
 "use client";
 
-import { useCoursesQuery } from "@/lib/api/courses";
 import { CoursePreviewCard } from "@/app/dashboard/components/course-preview-card";
 import { NewCourseButton } from "@/app/dashboard/components/new-course-button";
+import { useCoursesQuery } from "@/lib/hooks/api/courses";
 
 const DashboardPage = () => {
   const { isLoading, isError, data } = useCoursesQuery();
