@@ -1,4 +1,5 @@
 import FolderCardV2 from "@/app/course/[id]/components/folder-card-v2";
+import { NewFolderButton } from "@/app/course/[id]/components/materials-tab-v2/new-folder-button";
 import {
   getChildrenFolders,
   getFoldersNormalised,
@@ -77,11 +78,10 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
             Upload Materials
           </Button>
 
-          {/* <NewFolderButton
+          <NewFolderButton
             courseId={courseId}
-            parentFolderId={activeFolderId}
-            onAddFolder={onAddFolder}
-          /> */}
+            parentFolderId={currentParentFolderId}
+          />
 
           {/* <Button variant="outline" className="w-fit" size="sm">
             <LinkIcon className="mr-2 h-4 w-4" />
