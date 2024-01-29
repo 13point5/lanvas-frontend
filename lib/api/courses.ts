@@ -3,7 +3,7 @@ import { AxiosInstance } from "axios";
 import { Database } from "@/app/supabase.types";
 import { CourseMemberRole } from "@/app/types";
 
-type Course = Database["public"]["Tables"]["courses"]["Row"];
+export type Course = Database["public"]["Tables"]["courses"]["Row"];
 
 export type UserCourse = {
   role: CourseMemberRole;

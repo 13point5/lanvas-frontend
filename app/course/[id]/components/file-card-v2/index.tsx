@@ -20,11 +20,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import RenameDialog from "@/app/course/[id]/components/file-card-v2/rename-dialog";
+import { CourseMaterial } from "@/lib/api/courseMaterials";
+import { Course } from "@/lib/api/courses";
 
 type Props = {
-  id: number;
-  courseId: number;
-  name: string;
+  id: CourseMaterial["id"];
+  name: CourseMaterial["name"];
+  courseId: Course["id"];
 };
 
 const FileCard = ({ id, courseId, name }: Props) => {

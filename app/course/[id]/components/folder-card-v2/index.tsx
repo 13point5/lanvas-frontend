@@ -6,6 +6,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { CourseFolder } from "@/lib/api/courseFolders";
+import { Course } from "@/lib/api/courses";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import {
   FolderIcon,
@@ -15,9 +17,9 @@ import {
 } from "lucide-react";
 
 type Props = {
-  id: number;
-  courseId: number;
-  name: string;
+  id: CourseFolder["id"];
+  name: CourseFolder["name"];
+  courseId: Course["id"];
   onClick: (id: number) => void;
 };
 

@@ -25,15 +25,16 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useCourseMaterialsApi } from "@/lib/api/courseMaterials";
 import { useRenameCourseMaterialMutation } from "@/lib/hooks/api/courseMaterials";
+import { Course } from "@/lib/api/courses";
 
 const formSchema = z.object({
   name: z.string(),
 });
 
 type Props = {
-  courseId: number;
-  id: number;
-  name: string;
+  courseId: Course["id"];
+  id: CourseMaterial["id"];
+  name: CourseMaterial["name"];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };

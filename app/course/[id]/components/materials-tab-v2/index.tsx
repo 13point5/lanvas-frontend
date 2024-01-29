@@ -14,9 +14,10 @@ import { useCourseFoldersQuery } from "@/lib/hooks/api/courseFolders";
 import { useCourseMaterialsQuery } from "@/lib/hooks/api/courseMaterials";
 import { LinkIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
+import { Course } from "@/lib/api/courses";
 
 type Props = {
-  courseId: number;
+  courseId: Course["id"];
 };
 
 const MaterialsTabV2 = ({ courseId }: Props) => {
@@ -32,11 +33,11 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
       ? null
       : parentFolderBreadcrumbs[parentFolderBreadcrumbs.length - 1];
 
-  const handleFolderClick = (id: number) => {
+  const handleFolderClick = (id: CourseFolder["id"]) => {
     setParentFolderBreadcrumbs((prev) => [...prev, id]);
   };
 
-  const handleBreadcrumbItemClick = (id: number | null) => {
+  const handleBreadcrumbItemClick = (id: CourseFolder["parent_id"]) => {
     setParentFolderBreadcrumbs((prev) =>
       id === null ? [] : prev.slice(0, prev.indexOf(id) + 1)
     );
@@ -51,20 +52,16 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
   }
 
   const normalisedFolders = getFoldersNormalised(foldersQuery.data);
-
   const currentFolders = getChildrenFolders(
     normalisedFolders,
     currentParentFolderId
   );
-
-  // console.log({ normalisedFolders, currentFolders });
 
   const normalisedMaterials = getMaterialsNormalised(materialsQuery.data);
   const currentMaterials = getFolderMaterials(
     normalisedMaterials,
     currentParentFolderId
   );
-  console.log({ normalisedMaterials, currentMaterials });
 
   return (
     <div className="flex flex-col gap-8">

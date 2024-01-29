@@ -25,17 +25,18 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useCourseFoldersApi } from "@/lib/api/courseFolders";
 import { useRenameCourseFolderMutation } from "@/lib/hooks/api/courseFolders";
+import { Course } from "@/lib/api/courses";
 
 const formSchema = z.object({
   name: z.string(),
 });
 
 type Props = {
-  courseId: number;
-  id: number;
+  id: CourseFolder["id"];
+  name: CourseFolder["name"];
+  courseId: Course["id"];
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  name: string;
 };
 
 const RenameFolderDialog = ({
