@@ -1,10 +1,9 @@
 import { CourseFolder } from "@/lib/api/courseFolders";
-
-type FolderIdsByParentId = Map<CourseFolder["parent_id"], CourseFolder["id"][]>;
+import { CourseMaterial } from "@/lib/api/courseMaterials";
 
 type FoldersNormalised = {
   byId: Map<CourseFolder["id"], CourseFolder>;
-  idsByParentId: FolderIdsByParentId;
+  idsByParentId: Map<CourseFolder["parent_id"], CourseFolder["id"][]>;
 };
 
 export const getFoldersNormalised = (
@@ -36,5 +35,61 @@ export const getChildrenFolders = (
 ): CourseFolder[] => {
   const childrenFolderIds =
     normalisedFolders.idsByParentId.get(parentFolderId) || [];
-  return childrenFolderIds.map((id) => normalisedFolders.byId.get(id)!);
+
+  const result: CourseFolder[] = [];
+
+  childrenFolderIds.forEach((id) => {
+    const folder = normalisedFolders.byId.get(id);
+    if (!folder) return;
+
+    result.push(folder);
+  });
+
+  return result;
+};
+
+type MaterialsNormalised = {
+  byId: Map<CourseMaterial["id"], CourseMaterial>;
+  idsByFolderId: Map<CourseMaterial["folder_id"], CourseMaterial["id"][]>;
+};
+
+export const getMaterialsNormalised = (
+  materials: CourseMaterial[]
+): MaterialsNormalised => {
+  const state: MaterialsNormalised = {
+    byId: new Map(),
+    idsByFolderId: new Map(),
+  };
+
+  materials.forEach((material) => {
+    state.byId.set(material.id, material);
+
+    const folderId = material.folder_id;
+
+    if (!state.idsByFolderId.has(folderId)) {
+      state.idsByFolderId.set(folderId, []);
+    }
+
+    state.idsByFolderId.get(folderId)?.push(material.id);
+  });
+
+  return state;
+};
+
+export const getFolderMaterials = (
+  normalisedMaterials: MaterialsNormalised,
+  folderId: CourseMaterial["folder_id"]
+): CourseMaterial[] => {
+  const materialIds = normalisedMaterials.idsByFolderId.get(folderId) || [];
+
+  const result: CourseMaterial[] = [];
+
+  materialIds.forEach((id) => {
+    const material = normalisedMaterials.byId.get(id);
+    if (!material) return;
+
+    result.push(material);
+  });
+
+  return result;
 };

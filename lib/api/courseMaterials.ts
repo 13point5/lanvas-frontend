@@ -2,7 +2,8 @@ import { Database } from "@/app/supabase.types";
 import { useAxios } from "@/lib/hooks/useAxios";
 import { AxiosInstance } from "axios";
 
-type CourseMaterial = Database["public"]["Tables"]["course_materials"]["Row"];
+export type CourseMaterial =
+  Database["public"]["Tables"]["course_materials"]["Row"];
 
 type GetCourseMaterialsPayload = {
   courseId: number;

@@ -1,8 +1,11 @@
 import FolderCardV2 from "@/app/course/[id]/components/folder-card-v2";
+import FileCardV2 from "@/app/course/[id]/components/file-card-v2";
 import { NewFolderButton } from "@/app/course/[id]/components/materials-tab-v2/new-folder-button";
 import {
   getChildrenFolders,
+  getFolderMaterials,
   getFoldersNormalised,
+  getMaterialsNormalised,
 } from "@/app/course/[id]/components/materials-tab-v2/utils";
 import FolderBreadcrumbs from "@/app/course/[id]/components/materials-tab/folder-breadcrumbs";
 import { Button } from "@/components/ui/button";
@@ -54,7 +57,14 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
     currentParentFolderId
   );
 
-  console.log({ normalisedFolders, currentFolders });
+  // console.log({ normalisedFolders, currentFolders });
+
+  const normalisedMaterials = getMaterialsNormalised(materialsQuery.data);
+  const currentMaterials = getFolderMaterials(
+    normalisedMaterials,
+    currentParentFolderId
+  );
+  console.log({ normalisedMaterials, currentMaterials });
 
   return (
     <div className="flex flex-col gap-8">
@@ -105,6 +115,23 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
           ))}
         </div>
       </div>
+
+      {currentMaterials.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h5 className="text-md font-semibold tracking-tight">Materials</h5>
+
+          <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+            {currentMaterials.map((material) => (
+              <FileCardV2
+                key={material.id}
+                id={material.id}
+                courseId={courseId}
+                name={material.name}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,49 +1,54 @@
-import RenameFolderDialog from "@/app/course/[id]/components/folder-card-v2/rename-dialog";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useBoolean } from "@/lib/hooks/useBoolean";
-import {
+  FileIcon,
   FolderIcon,
   FolderSymlinkIcon,
   MoreVerticalIcon,
   PencilIcon,
+  TrashIcon,
 } from "lucide-react";
+import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useBoolean } from "@/lib/hooks/useBoolean";
+import RenameDialog from "@/app/course/[id]/components/file-card-v2/rename-dialog";
 
 type Props = {
   id: number;
   courseId: number;
   name: string;
-  onClick: (id: number) => void;
 };
 
-const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
+const FileCard = ({ id, courseId, name }: Props) => {
   const renameDialogState = useBoolean();
 
-  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
-
-    onClick(id);
-  };
+  // const moveDialogState = useBoolean();
 
   return (
     <>
-      <div
-        onClick={handleClick}
-        className="flex gap-4 items-center justify-between px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg cursor-pointer"
-      >
-        <div className="flex gap-4 items-center">
-          <FolderIcon className="text-gray-400" size={18} />
-          <p className="text-sm font-medium ">{name}</p>
+      <div className="flex gap-4 items-center justify-between px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg">
+        <div className="flex gap-4 items-center max-w-[80%]">
+          <FileIcon className="text-gray-400 w-5 h-5" />
+          <p className="text-sm font-medium truncate">{name}</p>
         </div>
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit">
-            <MoreVerticalIcon className="" size={18} />
+          <DropdownMenuTrigger>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit"
+            >
+              <MoreVerticalIcon className="" size={18} />
+            </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>
@@ -73,16 +78,16 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
       </div>
 
       {renameDialogState.value && (
-        <RenameFolderDialog
+        <RenameDialog
+          open={renameDialogState.value}
+          onOpenChange={renameDialogState.setValue}
           id={id}
           courseId={courseId}
           name={name}
-          open={renameDialogState.value}
-          onOpenChange={renameDialogState.setValue}
         />
       )}
     </>
   );
 };
 
-export default FolderCardV2;
+export default FileCard;
