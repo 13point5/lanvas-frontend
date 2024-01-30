@@ -13,8 +13,9 @@ import { CourseFolder } from "@/lib/api/courseFolders";
 import { useCourseFoldersQuery } from "@/lib/hooks/api/courseFolders";
 import { useCourseMaterialsQuery } from "@/lib/hooks/api/courseMaterials";
 import { LinkIcon, UploadIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Course } from "@/lib/api/courses";
+import { CourseContentContext } from "@/lib/contexts/CourseContent";
 
 type Props = {
   courseId: Course["id"];
@@ -23,7 +24,6 @@ type Props = {
 const MaterialsTabV2 = ({ courseId }: Props) => {
   const foldersQuery = useCourseFoldersQuery(courseId);
   const materialsQuery = useCourseMaterialsQuery(courseId);
-
   const [parentFolderBreadcrumbs, setParentFolderBreadcrumbs] = useState<
     CourseFolder["id"][]
   >([]);
@@ -32,6 +32,26 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
     parentFolderBreadcrumbs.length === 0
       ? null
       : parentFolderBreadcrumbs[parentFolderBreadcrumbs.length - 1];
+
+  const normalisedFolders = useMemo(
+    () => getFoldersNormalised(foldersQuery.data || []),
+    [foldersQuery.data]
+  );
+
+  const currentFolders = useMemo(
+    () => getChildrenFolders(normalisedFolders, currentParentFolderId),
+    [normalisedFolders, currentParentFolderId]
+  );
+
+  const normalisedMaterials = useMemo(
+    () => getMaterialsNormalised(materialsQuery.data || []),
+    [materialsQuery.data]
+  );
+
+  const currentMaterials = useMemo(
+    () => getFolderMaterials(normalisedMaterials, currentParentFolderId),
+    [normalisedMaterials, currentParentFolderId]
+  );
 
   const handleFolderClick = (id: CourseFolder["id"]) => {
     setParentFolderBreadcrumbs((prev) => [...prev, id]);
@@ -50,18 +70,6 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
   if (foldersQuery.isError || materialsQuery.isError) {
     return <p>error</p>;
   }
-
-  const normalisedFolders = getFoldersNormalised(foldersQuery.data);
-  const currentFolders = getChildrenFolders(
-    normalisedFolders,
-    currentParentFolderId
-  );
-
-  const normalisedMaterials = getMaterialsNormalised(materialsQuery.data);
-  const currentMaterials = getFolderMaterials(
-    normalisedMaterials,
-    currentParentFolderId
-  );
 
   return (
     <div className="flex flex-col gap-8">
@@ -97,38 +105,46 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <h5 className="text-md font-semibold tracking-tight">Folders</h5>
+      <CourseContentContext.Provider
+        value={{ folders: normalisedFolders, materials: normalisedMaterials }}
+      >
+        <>
+          <div className="flex flex-col gap-2">
+            <h5 className="text-md font-semibold tracking-tight">Folders</h5>
 
-        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
-          {currentFolders.map((folder) => (
-            <FolderCardV2
-              key={folder.id}
-              id={folder.id}
-              courseId={courseId}
-              name={folder.name}
-              onClick={handleFolderClick}
-            />
-          ))}
-        </div>
-      </div>
-
-      {currentMaterials.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <h5 className="text-md font-semibold tracking-tight">Materials</h5>
-
-          <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
-            {currentMaterials.map((material) => (
-              <FileCardV2
-                key={material.id}
-                id={material.id}
-                courseId={courseId}
-                name={material.name}
-              />
-            ))}
+            <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+              {currentFolders.map((folder) => (
+                <FolderCardV2
+                  key={folder.id}
+                  id={folder.id}
+                  courseId={courseId}
+                  name={folder.name}
+                  onClick={handleFolderClick}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+
+          {currentMaterials.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <h5 className="text-md font-semibold tracking-tight">
+                Materials
+              </h5>
+
+              <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+                {currentMaterials.map((material) => (
+                  <FileCardV2
+                    key={material.id}
+                    id={material.id}
+                    courseId={courseId}
+                    name={material.name}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      </CourseContentContext.Provider>
     </div>
   );
 };

@@ -20,16 +20,10 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { CourseMemberRole } from "@/app/types";
 import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { useBoolean } from "@/lib/hooks/useBoolean";
-import {
-  UserCourse,
-  useCoursesApi,
-  useCoursesMutation,
-} from "@/lib/api/courses";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCoursesMutation } from "@/lib/hooks/api/courses";
 
 const formSchema = z.object({
   title: z.string(),

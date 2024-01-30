@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import { SupabaseProvider } from "@/lib/contexts/SupabaseProvider";
+import { SupabaseProvider } from "@/lib/contexts/Supabase";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Toaster } from "react-hot-toast";
 import ReactQueryProvider from "@/components/react-query-provider";

@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 
-import { useSupabase } from "@/lib/contexts/SupabaseProvider";
+import { useSupabase } from "@/lib/contexts/Supabase";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000",

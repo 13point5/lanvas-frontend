@@ -1,7 +1,7 @@
 import { CourseFolder } from "@/lib/api/courseFolders";
 import { CourseMaterial } from "@/lib/api/courseMaterials";
 
-type FoldersNormalised = {
+export type FoldersNormalised = {
   byId: Map<CourseFolder["id"], CourseFolder>;
   idsByParentId: Map<CourseFolder["parent_id"], CourseFolder["id"][]>;
 };
@@ -48,7 +48,7 @@ export const getChildrenFolders = (
   return result;
 };
 
-type MaterialsNormalised = {
+export type MaterialsNormalised = {
   byId: Map<CourseMaterial["id"], CourseMaterial>;
   idsByFolderId: Map<CourseMaterial["folder_id"], CourseMaterial["id"][]>;
 };

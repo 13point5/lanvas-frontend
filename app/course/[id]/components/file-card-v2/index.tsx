@@ -43,14 +43,8 @@ const FileCard = ({ id, courseId, name }: Props) => {
         </div>
 
         <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit"
-            >
-              <MoreVerticalIcon className="" size={18} />
-            </Button>
+          <DropdownMenuTrigger className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit">
+            <MoreVerticalIcon className="" size={18} />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>

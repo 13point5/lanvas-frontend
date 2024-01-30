@@ -1,5 +1,5 @@
 import RenameFolderDialog from "@/app/course/[id]/components/folder-card-v2/rename-dialog";
-import { Button } from "@/components/ui/button";
+import MoveFolderDialog from "@/app/course/[id]/components/folder-card-v2/move-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,7 @@ type Props = {
 
 const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
   const renameDialogState = useBoolean();
+  const moveDialogState = useBoolean();
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
@@ -65,7 +66,7 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                // moveDialogState.on();
+                moveDialogState.on();
               }}
             >
               <FolderSymlinkIcon className="mr-4" size={14} /> Move
@@ -81,6 +82,15 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
           name={name}
           open={renameDialogState.value}
           onOpenChange={renameDialogState.setValue}
+        />
+      )}
+
+      {moveDialogState.value && (
+        <MoveFolderDialog
+          id={id}
+          courseId={courseId}
+          open={moveDialogState.value}
+          onOpenChange={moveDialogState.setValue}
         />
       )}
     </>
