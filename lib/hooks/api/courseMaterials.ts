@@ -37,3 +37,25 @@ export const useRenameCourseMaterialMutation = () => {
     },
   });
 };
+
+export const useMoveCourseMaterialMutation = () => {
+  const { moveCourseMaterial } = useCourseMaterialsApi();
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: moveCourseMaterial,
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData<CourseMaterial[]>(
+        getCourseMaterialKey(variables.courseId),
+        (oldData = []) => {
+          if (!oldData) return [data.data];
+
+          return oldData.map((folder) =>
+            folder.id === variables.id ? data.data : folder
+          );
+        }
+      );
+    },
+  });
+};

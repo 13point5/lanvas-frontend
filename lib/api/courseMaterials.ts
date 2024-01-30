@@ -34,7 +34,7 @@ const renameCourseMaterial = (
 type MoveCourseMaterialPayload = {
   courseId: number;
   id: number;
-  folderId: number;
+  folderId: CourseMaterial["folder_id"];
 };
 
 const moveCourseMaterial = (

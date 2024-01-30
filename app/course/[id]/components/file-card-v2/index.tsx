@@ -22,6 +22,9 @@ import { useBoolean } from "@/lib/hooks/useBoolean";
 import RenameDialog from "@/app/course/[id]/components/file-card-v2/rename-dialog";
 import { CourseMaterial } from "@/lib/api/courseMaterials";
 import { Course } from "@/lib/api/courses";
+import { useMoveCourseMaterialMutation } from "@/lib/hooks/api/courseMaterials";
+import { CourseFolder } from "@/lib/api/courseFolders";
+import MoveCourseContentDialog from "@/components/move-course-content-dialog";
 
 type Props = {
   id: CourseMaterial["id"];
@@ -31,8 +34,19 @@ type Props = {
 
 const FileCard = ({ id, courseId, name }: Props) => {
   const renameDialogState = useBoolean();
+  const moveDialogState = useBoolean();
 
-  // const moveDialogState = useBoolean();
+  const mutation = useMoveCourseMaterialMutation();
+
+  const handleMove = async (folderId: CourseFolder["parent_id"]) => {
+    await mutation.mutateAsync({
+      courseId,
+      id,
+      folderId,
+    });
+
+    moveDialogState.off();
+  };
 
   return (
     <>
@@ -64,7 +78,7 @@ const FileCard = ({ id, courseId, name }: Props) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                // moveDialogState.on();
+                moveDialogState.on();
               }}
             >
               <FolderSymlinkIcon className="mr-4" size={14} /> Move
@@ -80,6 +94,16 @@ const FileCard = ({ id, courseId, name }: Props) => {
           id={id}
           courseId={courseId}
           name={name}
+        />
+      )}
+
+      {moveDialogState.value && (
+        <MoveCourseContentDialog
+          title="Move Material"
+          open={moveDialogState.value}
+          onOpenChange={moveDialogState.setValue}
+          onMove={handleMove}
+          loading={mutation.isPending}
         />
       )}
     </>
