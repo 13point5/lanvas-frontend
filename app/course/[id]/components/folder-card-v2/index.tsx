@@ -1,5 +1,4 @@
 import RenameFolderDialog from "@/app/course/[id]/components/folder-card-v2/rename-dialog";
-import MoveFolderDialog from "@/app/course/[id]/components/folder-card-v2/move-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +14,8 @@ import {
   MoreVerticalIcon,
   PencilIcon,
 } from "lucide-react";
+import { useMoveCourseFolderMutation } from "@/lib/hooks/api/courseFolders";
+import MoveCourseContentDialog from "@/components/move-course-content-dialog";
 
 type Props = {
   id: CourseFolder["id"];
@@ -26,6 +27,22 @@ type Props = {
 const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
   const renameDialogState = useBoolean();
   const moveDialogState = useBoolean();
+
+  const mutation = useMoveCourseFolderMutation();
+
+  const handleMove = async (destinationFolderId: CourseFolder["parent_id"]) => {
+    if (destinationFolderId === id) {
+      return;
+    }
+
+    await mutation.mutateAsync({
+      courseId,
+      id,
+      parentId: destinationFolderId,
+    });
+
+    moveDialogState.off();
+  };
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
@@ -86,11 +103,12 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
       )}
 
       {moveDialogState.value && (
-        <MoveFolderDialog
-          id={id}
-          courseId={courseId}
+        <MoveCourseContentDialog
+          title="Move Folder"
           open={moveDialogState.value}
           onOpenChange={moveDialogState.setValue}
+          onMove={handleMove}
+          loading={mutation.isPending}
         />
       )}
     </>

@@ -15,19 +15,23 @@ import {
   FoldersNormalised,
   MaterialsNormalised,
 } from "@/app/course/[id]/components/materials-tab-v2/utils";
-import { useMoveCourseFolderMutation } from "@/lib/hooks/api/courseFolders";
-import { Course } from "@/lib/api/courses";
 
 const renderNode = ({
   folderId,
   folders,
   materials,
 }: {
-  folderId: CourseFolder["id"];
+  folderId: CourseFolder["parent_id"];
   folders: FoldersNormalised;
   materials: MaterialsNormalised;
 }) => {
-  const folder = folders.byId.get(folderId);
+  const folder = folderId
+    ? folders.byId.get(folderId)
+    : {
+        id: "home",
+        name: "Home",
+      };
+
   if (!folder) {
     return null;
   }
@@ -36,7 +40,12 @@ const renderNode = ({
   const childrenMaterialIds = materials.idsByFolderId.get(folderId) || [];
 
   return (
-    <TreeView.Node key={folderId} id={folderId} label={folder.name}>
+    <TreeView.Node
+      key={folderId}
+      id={folder.id}
+      label={folder.name}
+      alwaysOpen={folderId === null}
+    >
       {childrenFolderIds.map((folderId) =>
         renderNode({ folderId, folders, materials })
       )}
@@ -58,65 +67,53 @@ const renderNode = ({
 };
 
 type Props = {
-  id: CourseFolder["id"];
-  courseId: Course["id"];
+  title: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onMove: (destinationFolderId: CourseFolder["parent_id"]) => void;
+  loading: boolean;
 };
 
-const MoveFolderDialog = ({ open, onOpenChange, id, courseId }: Props) => {
+const MoveCourseContentDialog = ({
+  title,
+  open,
+  onOpenChange,
+  onMove,
+  loading,
+}: Props) => {
   const [selectedNodeId, setSelectedNodeId] = useState<
-    CourseFolder["id"] | null
-  >(null);
+    CourseFolder["id"] | "home"
+  >("home");
 
   const courseContent = useContext(CourseContentContext);
 
-  const rootFolderIds = courseContent.folders.idsByParentId.get(null) || [];
-
-  const mutation = useMoveCourseFolderMutation();
-
   const handleMoveFolder = async () => {
-    await mutation.mutateAsync({
-      id,
-      courseId,
-      parentId: selectedNodeId,
-    });
-
-    onOpenChange(false);
+    onMove(selectedNodeId === "home" ? null : selectedNodeId);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Move Folder</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
 
         <TreeView.Root
           value={selectedNodeId}
           onChange={(newParentFolderId) => {
-            // don't allow parent folder to be itself
-            if (newParentFolderId === id) return;
-
             setSelectedNodeId(newParentFolderId as CourseFolder["id"]);
           }}
         >
-          {rootFolderIds.map((folderId) =>
-            renderNode({
-              folderId,
-              materials: courseContent.materials,
-              folders: courseContent.folders,
-            })
-          )}
+          {renderNode({
+            folderId: null,
+            materials: courseContent.materials,
+            folders: courseContent.folders,
+          })}
         </TreeView.Root>
 
         <DialogFooter>
-          <Button
-            type="submit"
-            disabled={mutation.isPending}
-            onClick={handleMoveFolder}
-          >
-            {mutation.isPending ? (
+          <Button type="submit" disabled={loading} onClick={handleMoveFolder}>
+            {loading ? (
               <>
                 <Loader2Icon className="animate-spin mr-2 h-4 w-4" />
                 Moving...
@@ -131,4 +128,4 @@ const MoveFolderDialog = ({ open, onOpenChange, id, courseId }: Props) => {
   );
 };
 
-export default MoveFolderDialog;
+export default MoveCourseContentDialog;

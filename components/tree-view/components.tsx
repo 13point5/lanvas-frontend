@@ -19,6 +19,7 @@ type NodeProps = {
     close: ReactNode;
   };
   disableSelect?: boolean;
+  alwaysOpen?: boolean;
 
   children?: ReactNode | ReactNode[];
 };
@@ -29,10 +30,11 @@ export const Node = ({
   children,
   icons,
   disableSelect = false,
+  alwaysOpen = false,
 }: NodeProps) => {
   const { open, dispatch, selectedNodeId, selectNode } =
     useContext(TreeViewContext);
-  const isOpen = open.get(id);
+  const isOpen = alwaysOpen || open.get(id);
 
   return (
     <li className="flex flex-col">
