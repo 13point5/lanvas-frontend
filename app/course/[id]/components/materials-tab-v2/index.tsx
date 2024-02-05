@@ -7,7 +7,7 @@ import {
   getFoldersNormalised,
   getMaterialsNormalised,
 } from "@/app/course/[id]/components/materials-tab-v2/utils";
-import FolderBreadcrumbs from "@/app/course/[id]/components/materials-tab/folder-breadcrumbs";
+import FolderBreadcrumbs from "@/app/course/[id]/components/materials-tab-v2/folder-breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { CourseFolder } from "@/lib/api/courseFolders";
 import { useCourseFoldersQuery } from "@/lib/hooks/api/courseFolders";
