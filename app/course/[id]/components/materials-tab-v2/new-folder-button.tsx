@@ -47,8 +47,6 @@ export const NewFolderButton = ({ courseId, parentFolderId }: Props) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("values", values);
-
     await mutation.mutateAsync({
       courseId,
       parentFolderId,

@@ -12,10 +12,12 @@ import { Button } from "@/components/ui/button";
 import { CourseFolder } from "@/lib/api/courseFolders";
 import { useCourseFoldersQuery } from "@/lib/hooks/api/courseFolders";
 import { useCourseMaterialsQuery } from "@/lib/hooks/api/courseMaterials";
-import { LinkIcon, UploadIcon } from "lucide-react";
+import { AreaChartIcon, LinkIcon, UploadIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Course } from "@/lib/api/courses";
 import { CourseContentContext } from "@/lib/contexts/CourseContent";
+import { EngagementAndUnderstandingInsights } from "@/app/course/[id]/components/materials-tab-v2/engagement-and-understanding";
+import { ModuleConcepts } from "@/app/course/[id]/components/materials-tab-v2/module-concepts-chart";
 
 type Props = {
   courseId: Course["id"];
@@ -72,7 +74,7 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 pb-4">
       <div className="flex flex-col gap-2">
         <FolderBreadcrumbs
           items={parentFolderBreadcrumbs.map((id) => ({
@@ -143,6 +145,12 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
               </div>
             </div>
           )}
+
+          {/* {currentParentFolderId === null ? (
+            <EngagementAndUnderstandingInsights />
+          ) : (
+            <ModuleConcepts />
+          )} */}
         </>
       </CourseContentContext.Provider>
     </div>

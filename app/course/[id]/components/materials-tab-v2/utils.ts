@@ -36,13 +36,17 @@ export const getChildrenFolders = (
   const childrenFolderIds =
     normalisedFolders.idsByParentId.get(parentFolderId) || [];
 
-  const result: CourseFolder[] = [];
+  let result: CourseFolder[] = [];
 
   childrenFolderIds.forEach((id) => {
     const folder = normalisedFolders.byId.get(id);
     if (!folder) return;
 
     result.push(folder);
+  });
+
+  result = result.sort((a, b) => {
+    return a.name.localeCompare(b.name);
   });
 
   return result;

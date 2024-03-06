@@ -59,3 +59,23 @@ export const useMoveCourseMaterialMutation = () => {
     },
   });
 };
+
+export const useUploadCourseMaterialMutation = () => {
+  const { uploadCourseMaterial } = useCourseMaterialsApi();
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: uploadCourseMaterial,
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData<CourseMaterial[]>(
+        getCourseMaterialKey(variables.courseId),
+        (oldData = []) => {
+          if (!oldData) return [data.data];
+
+          return [...oldData, data.data];
+        }
+      );
+    },
+  });
+};
