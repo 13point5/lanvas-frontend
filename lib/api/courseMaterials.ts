@@ -47,7 +47,7 @@ const moveCourseMaterial = (
 
 type UploadCourseMaterialPayload = {
   courseId: number;
-  folderId: number;
+  folderId: number | null;
   file: File;
 };
 

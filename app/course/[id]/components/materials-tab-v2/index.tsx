@@ -18,6 +18,7 @@ import { Course } from "@/lib/api/courses";
 import { CourseContentContext } from "@/lib/contexts/CourseContent";
 import { EngagementAndUnderstandingInsights } from "@/app/course/[id]/components/materials-tab-v2/engagement-and-understanding";
 import { ModuleConcepts } from "@/app/course/[id]/components/materials-tab-v2/module-concepts-chart";
+import UploadMaterialButton from "@/app/course/[id]/components/materials-tab-v2/upload-material-button";
 
 type Props = {
   courseId: Course["id"];
@@ -85,15 +86,10 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
         />
 
         <div className="flex gap-4 items-center">
-          <Button
-            variant="outline"
-            className="w-fit"
-            size="sm"
-            // onClick={uploadDialogState.on}
-          >
-            <UploadIcon className="mr-2 h-4 w-4" />
-            Upload Materials
-          </Button>
+          <UploadMaterialButton
+            courseId={courseId}
+            folderId={currentParentFolderId}
+          />
 
           <NewFolderButton
             courseId={courseId}
