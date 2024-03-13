@@ -60,6 +60,16 @@ const moveCourseFolder = (
     parent_id: payload.parentId,
   });
 
+type DeleteCourseFolderPayload = {
+  courseId: number;
+  id: number;
+};
+
+const deleteCourseFolder = (
+  payload: DeleteCourseFolderPayload,
+  axiosInstance: AxiosInstance
+) => axiosInstance.delete(`/courses/${payload.courseId}/folders/${payload.id}`);
+
 export const useCourseFoldersApi = () => {
   const { axiosInstance } = useAxios();
 
@@ -72,5 +82,7 @@ export const useCourseFoldersApi = () => {
       renameCourseFolder(payload, axiosInstance),
     moveCourseFolder: (payload: MoveCourseFolderPayload) =>
       moveCourseFolder(payload, axiosInstance),
+    deleteCourseFolder: (payload: DeleteCourseFolderPayload) =>
+      deleteCourseFolder(payload, axiosInstance),
   };
 };

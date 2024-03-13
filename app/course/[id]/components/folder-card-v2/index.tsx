@@ -13,8 +13,12 @@ import {
   FolderSymlinkIcon,
   MoreVerticalIcon,
   PencilIcon,
+  TrashIcon,
 } from "lucide-react";
-import { useMoveCourseFolderMutation } from "@/lib/hooks/api/courseFolders";
+import {
+  useDeleteCourseFolderMutation,
+  useMoveCourseFolderMutation,
+} from "@/lib/hooks/api/courseFolders";
 import MoveCourseContentDialog from "@/components/move-course-content-dialog";
 
 type Props = {
@@ -28,20 +32,30 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
   const renameDialogState = useBoolean();
   const moveDialogState = useBoolean();
 
-  const mutation = useMoveCourseFolderMutation();
+  const moveMutation = useMoveCourseFolderMutation();
+  const deleteMutation = useDeleteCourseFolderMutation();
 
   const handleMove = async (destinationFolderId: CourseFolder["parent_id"]) => {
     if (destinationFolderId === id) {
       return;
     }
 
-    await mutation.mutateAsync({
+    await moveMutation.mutateAsync({
       courseId,
       id,
       parentId: destinationFolderId,
     });
 
     moveDialogState.off();
+  };
+
+  const handleDeleteItemClick: React.MouseEventHandler<HTMLDivElement> = async (
+    e
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    await deleteMutation.mutate({ courseId, id });
   };
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -88,6 +102,10 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
             >
               <FolderSymlinkIcon className="mr-4" size={14} /> Move
             </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={handleDeleteItemClick}>
+              <TrashIcon className="mr-4" size={14} /> Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -108,7 +126,7 @@ const FolderCardV2 = ({ id, courseId, name, onClick }: Props) => {
           open={moveDialogState.value}
           onOpenChange={moveDialogState.setValue}
           onMove={handleMove}
-          loading={mutation.isPending}
+          loading={moveMutation.isPending}
         />
       )}
     </>

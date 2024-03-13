@@ -76,3 +76,23 @@ export const useMoveCourseFolderMutation = () => {
     },
   });
 };
+
+export const useDeleteCourseFolderMutation = () => {
+  const { deleteCourseFolder } = useCourseFoldersApi();
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteCourseFolder,
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData<CourseFolder[]>(
+        getCourseFolderKey(variables.courseId),
+        (oldData = []) => {
+          if (!oldData) return [];
+
+          return oldData.filter((folder) => folder.id !== variables.id);
+        }
+      );
+    },
+  });
+};
