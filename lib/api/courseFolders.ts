@@ -29,7 +29,7 @@ const createCourseFolder = (
 ) =>
   axiosInstance.post(`/courses/${payload.courseId}/folders`, {
     name: payload.name,
-    parentId: payload.parentFolderId,
+    parent_id: payload.parentFolderId,
   });
 
 type RenameCourseFolderPayload = {
