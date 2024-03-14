@@ -57,7 +57,10 @@ const uploadCourseMaterial = (
 ) => {
   const formData = new FormData();
   formData.append("uploadFile", payload.file);
-  formData.append("folder_id", `${payload.folderId}`);
+
+  if (payload.folderId !== null) {
+    formData.append("folder_id", `${payload.folderId}`);
+  }
 
   return axiosInstance.post(
     `/courses/${payload.courseId}/materials/upload`,
