@@ -12,8 +12,7 @@ import {
 } from "@/components/ui/tabs-v2";
 import { Course } from "@/app/types";
 import { useState } from "react";
-import MaterialsTabV2 from "@/app/course/[id]/components/materials-tab-v2";
-import ChatsTab from "@/app/course/[id]/components/chats-tab";
+import StudentsTab from "@/app/course/[id]/components/students-tab";
 
 enum TabTypes {
   Materials = "materials",
@@ -26,7 +25,8 @@ type Props = {
 };
 
 const TeacherView = ({ course }: Props) => {
-  const [activeTab, setActiveTab] = useState<TabTypes>(TabTypes.Materials);
+  console.log("course", course);
+  const [activeTab, setActiveTab] = useState<TabTypes>(TabTypes.Students);
 
   const handleActiveTabChange = (value: string) => {
     setActiveTab(value as TabTypes);
@@ -55,19 +55,17 @@ const TeacherView = ({ course }: Props) => {
 
         <Tabs value={activeTab} onValueChange={handleActiveTabChange}>
           <TabsList className="">
-            <TabsTrigger value={TabTypes.Materials}>Materials</TabsTrigger>
-            {/* <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger> */}
-            <TabsTrigger value={TabTypes.Chats}>Chats</TabsTrigger>
+            <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger>
+            {/* <TabsTrigger value={TabTypes.Materials}>Materials</TabsTrigger> */}
+            {/* <TabsTrigger value={TabTypes.Chats}>Chats</TabsTrigger> */}
           </TabsList>
         </Tabs>
       </div>
 
-      <div className="w-full px-6 py-8 border-2 border-red-500 flex flex-col">
-        {activeTab === TabTypes.Materials && (
-          <MaterialsTabV2 courseId={course.id} />
+      <div className="w-full px-6 py-8 flex flex-col">
+        {activeTab === TabTypes.Students && (
+          <StudentsTab courseId={course.id} />
         )}
-
-        {activeTab === TabTypes.Chats && <ChatsTab courseId={course.id} />}
       </div>
     </main>
   );

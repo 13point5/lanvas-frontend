@@ -1,14 +1,16 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import { Button } from "@/components/ui/button";
 import InviteStudentsDialog from "@/app/course/[id]/components/students-tab/invite-students-dialog";
-import { useCourseMembersApi } from "@/lib/api/courseMembers";
 import { DataTable } from "@/components/data-table";
-import { PlusIcon } from "lucide-react";
+import { Loader2Icon, PlusIcon } from "lucide-react";
 import { CourseMember } from "@/app/types";
+import {
+  useAddStudentsMutation,
+  useCourseMembersQuery,
+} from "@/lib/hooks/api/courseMembers";
 
 const columns: ColumnDef<CourseMember>[] = [
   { header: "Email", accessorKey: "email" },
@@ -16,26 +18,38 @@ const columns: ColumnDef<CourseMember>[] = [
 ];
 
 type Props = {
-  members: CourseMember[];
-  onUpdateMembers: (members: CourseMember[]) => void;
+  courseId: number;
 };
 
-export default function StudentsTab({ members, onUpdateMembers }: Props) {
-  const params = useParams();
-  const courseId = Number(params.id);
+export default function StudentsTab({ courseId }: Props) {
+  const membersQuery = useCourseMembersQuery(courseId);
 
-  const students = members.filter((member) => member.role === "student");
-
-  const { addCourseMembers } = useCourseMembersApi();
+  const addStudentsMutation = useAddStudentsMutation(courseId);
 
   const inviteStudentsDialogState = useBoolean();
 
+  if (membersQuery.isPending) {
+    return (
+      <div className="flex items-center gap-2">
+        <Loader2Icon className="w-6 h-6 animate-spin" />
+        <span>Fetching Students</span>
+      </div>
+    );
+  }
+
+  if (membersQuery.isError) {
+    return <span className="text-red-500">Error fetching students</span>;
+  }
+
+  const members: CourseMember[] = membersQuery.data || [];
+
+  const students = members.filter((member) => member.role === "student");
+
   const handleInviteStudents = async (emails: string[]) => {
-    const res = await addCourseMembers({
+    await addStudentsMutation.mutateAsync({
       courseId,
       members: emails.map((email) => ({ email, role: "student" })),
     });
-    onUpdateMembers(res.data);
   };
 
   return (
