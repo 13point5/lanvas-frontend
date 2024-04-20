@@ -52,8 +52,14 @@ const ChatView = () => {
   };
 
   return (
-    <div className="h-full max-h-full flex flex-col gap-0 p-2 relative">
-      <div className="overflow-auto w-full">
+    <div
+      className="flex flex-col gap-0 p-2 h-full max-h-[calc(100vh - 96px)] overflow-hidden"
+      style={{
+        maxHeight: "calc(100vh - 96px - 64px)",
+        overflow: "hidden",
+      }}
+    >
+      <div className="overflow-auto w-full h-full max-h-full flex-1">
         {messages.map(
           (message, index) =>
             message.role !== Role.system && (
@@ -66,10 +72,7 @@ const ChatView = () => {
         )}
       </div>
 
-      <form
-        className="flex gap-4 w-full absolute left-0 bottom-0"
-        onSubmit={handleSubmit}
-      >
+      <form className="flex gap-4 w-full" onSubmit={handleSubmit}>
         <Input
           className="flex-1"
           placeholder="type your message here"
