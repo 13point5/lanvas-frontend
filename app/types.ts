@@ -24,39 +24,17 @@ export enum CourseMemberRole {
   student = "student",
 }
 
-// export type CourseMember = {
-//   id: number;
-//   email: string;
-//   created_at: string;
-//   course_id: number;
-//   role: CourseMemberRole;
-// };
-
 export type CourseMember =
   Database["public"]["Tables"]["course_members"]["Row"];
 
-export type CourseMaterial = {
-  id: number;
-  course_id: number;
-  created_at: string;
-  name: string;
-  status: string;
-  folder_id: number | null;
-};
+export type CourseMaterial =
+  Database["public"]["Tables"]["course_materials"]["Row"];
 
-export type CourseFolder = {
-  id: number;
-  course_id: number;
-  parent_id: number | null;
-  name: string;
-  created_at: string;
-};
+export type CourseFolder =
+  Database["public"]["Tables"]["course_folders"]["Row"];
 
-export type Course = {
-  id: number;
-  created_at: string;
-  title: string;
-  // course_members: CourseMember[];
-  // course_folders: CourseFolder[];
-  // course_materials: CourseMaterial[];
-};
+export type Course = Database["public"]["Tables"]["courses"]["Row"];
+
+export type CourseId = Course["id"];
+
+export type CourseChat = Database["public"]["Tables"]["course_chats"]["Row"];

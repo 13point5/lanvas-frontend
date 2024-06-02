@@ -1,9 +1,6 @@
 import { useAxios } from "@/lib/hooks/useAxios";
 import { AxiosInstance } from "axios";
-import { Database } from "@/app/supabase.types";
-import { CourseMemberRole } from "@/app/types";
-
-export type Course = Database["public"]["Tables"]["courses"]["Row"];
+import { Course, CourseMemberRole } from "@/app/types";
 
 export type UserCourse = {
   role: CourseMemberRole;

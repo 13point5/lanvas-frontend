@@ -1,4 +1,5 @@
-import { CourseFolder, useCourseFoldersApi } from "@/lib/api/courseFolders";
+import { CourseFolder } from "@/app/types";
+import { useCourseFoldersApi } from "@/lib/api/courseFolders";
 import { getCourseKey } from "@/lib/hooks/api/courses";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

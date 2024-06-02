@@ -1,7 +1,5 @@
-import {
-  CourseMaterial,
-  useCourseMaterialsApi,
-} from "@/lib/api/courseMaterials";
+import { CourseMaterial } from "@/app/types";
+import { useCourseMaterialsApi } from "@/lib/api/courseMaterials";
 import { getCourseKey } from "@/lib/hooks/api/courses";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

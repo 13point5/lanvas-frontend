@@ -8,8 +8,7 @@ import InviteStudentsDialog from "@/app/course/[id]/components/students-tab/invi
 import { useCourseMembersApi } from "@/lib/api/courseMembers";
 import { DataTable } from "@/components/data-table";
 import { AlertCircleIcon, Loader2Icon, PlusIcon } from "lucide-react";
-import { CourseMember } from "@/app/types";
-import { Course } from "@/lib/api/courses";
+import { CourseId, CourseMember } from "@/app/types";
 import {
   useAddCourseMembersMutation,
   useCourseMembersQuery,
@@ -21,7 +20,7 @@ const columns: ColumnDef<CourseMember>[] = [
 ];
 
 type Props = {
-  courseId: Course["id"];
+  courseId: CourseId;
 };
 
 export default function StudentsTab({ courseId }: Props) {

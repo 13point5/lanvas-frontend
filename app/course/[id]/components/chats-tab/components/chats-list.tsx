@@ -1,8 +1,19 @@
+import { ChatItem } from "@/app/course/[id]/components/chats-tab/components/chat-item";
+import { NewChatButton } from "@/app/course/[id]/components/chats-tab/components/new-chat-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PlusIcon } from "lucide-react";
+import { useCourseChatsQuery } from "@/lib/hooks/api/courseChats";
+import { Loader2Icon } from "lucide-react";
 
-const ChatsList = () => {
+type Props = {
+  courseId: number;
+};
+
+const ChatsList = ({ courseId }: Props) => {
+  const chatsQuery = useCourseChatsQuery(courseId);
+
+  console.log("chatsQuery.data", chatsQuery.data);
+
   return (
     <div
       className="w-[260px] overflow-auto rounded-md bg-slate-50 flex flex-col gap-4 p-2"
@@ -10,33 +21,26 @@ const ChatsList = () => {
         height: "calc(100vh - 96px - 64px)",
       }}
     >
-      <NewChatButton />
+      <NewChatButton courseId={courseId} />
 
       <Separator />
 
-      <div className="flex flex-col">
-        <ChatItem name="Chat 1" />
-        <ChatItem name="Chat 2" />
-        <ChatItem name="Chat 3" />
-      </div>
+      {chatsQuery.isPending && (
+        <div className="flex gap-2 items-center">
+          <Loader2Icon className="animate-spin" size={8} />
+          <span className="text-sm">Fetching Chats</span>
+        </div>
+      )}
+
+      {chatsQuery.data && (
+        <div className="flex flex-col">
+          {chatsQuery.data.map((item) => (
+            <ChatItem key={item.id} name={item.title} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
 export default ChatsList;
-
-const NewChatButton = () => {
-  return (
-    <Button variant="ghost" className="w-full justify-start">
-      <PlusIcon className="mr-2 w-4 h-4" /> New Chat
-    </Button>
-  );
-};
-
-const ChatItem = ({ name }: { name: string }) => {
-  return (
-    <Button variant="ghost" className="w-full justify-start">
-      {name}
-    </Button>
-  );
-};
