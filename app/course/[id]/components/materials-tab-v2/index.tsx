@@ -110,6 +110,10 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
           <div className="flex flex-col gap-2">
             <h5 className="text-md font-semibold tracking-tight">Folders</h5>
 
+            {currentFolders.length === 0 && (
+              <p className="text-sm text-muted-foreground">No Folders yet</p>
+            )}
+
             <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
               {currentFolders.map((folder) => (
                 <FolderCardV2
@@ -123,24 +127,24 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
             </div>
           </div>
 
-          {currentMaterials.length > 0 && (
-            <div className="flex flex-col gap-2">
-              <h5 className="text-md font-semibold tracking-tight">
-                Materials
-              </h5>
+          <div className="flex flex-col gap-2">
+            <h5 className="text-md font-semibold tracking-tight">Materials</h5>
 
-              <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
-                {currentMaterials.map((material) => (
-                  <FileCardV2
-                    key={material.id}
-                    id={material.id}
-                    courseId={courseId}
-                    name={material.name}
-                  />
-                ))}
-              </div>
+            {currentMaterials.length === 0 && (
+              <p className="text-sm text-muted-foreground">No Materials yet</p>
+            )}
+
+            <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+              {currentMaterials.map((material) => (
+                <FileCardV2
+                  key={material.id}
+                  id={material.id}
+                  courseId={courseId}
+                  name={material.name}
+                />
+              ))}
             </div>
-          )}
+          </div>
 
           {/* {currentParentFolderId === null ? (
             <EngagementAndUnderstandingInsights />

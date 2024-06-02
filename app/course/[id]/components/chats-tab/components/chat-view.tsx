@@ -53,10 +53,9 @@ const ChatView = () => {
 
   return (
     <div
-      className="flex flex-col gap-0 p-2 h-full max-h-[calc(100vh - 96px)] overflow-hidden"
+      className="flex flex-1 flex-col gap-2 p-2 overflow-hidden"
       style={{
-        maxHeight: "calc(100vh - 96px - 64px)",
-        overflow: "hidden",
+        height: "calc(100vh - 96px - 64px)",
       }}
     >
       <div className="overflow-auto w-full h-full max-h-full flex-1">

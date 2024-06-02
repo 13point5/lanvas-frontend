@@ -7,7 +7,7 @@ type Props = {
 
 const ChatsTab = ({ courseId }: Props) => {
   return (
-    <div className="h-full flex gap-4">
+    <div className="h-full w-full flex gap-4">
       <ChatsList />
       <ChatView />
     </div>

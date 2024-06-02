@@ -34,7 +34,7 @@ type Props = {
 };
 
 const TeacherView = ({ course, isLoading, isError }: Props) => {
-  const [activeTab, setActiveTab] = useState<TabTypes>(TabTypes.Chats);
+  const [activeTab, setActiveTab] = useState<TabTypes>(TabTypes.Materials);
 
   const handleActiveTabChange = (value: string) => {
     setActiveTab(value as TabTypes);
@@ -68,21 +68,19 @@ const TeacherView = ({ course, isLoading, isError }: Props) => {
         <Tabs value={activeTab} onValueChange={handleActiveTabChange}>
           <TabsList className="">
             <TabsTrigger value={TabTypes.Materials}>Materials</TabsTrigger>
-            {/* <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger> */}
             <TabsTrigger value={TabTypes.Chats}>Chats</TabsTrigger>
+            {/* <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger> */}
           </TabsList>
         </Tabs>
       </div>
 
       {course && (
         <div className="w-full px-6 py-8 flex flex-col">
-          {/* <> */}
           {activeTab === TabTypes.Materials && (
             <MaterialsTabV2 courseId={course.id} />
           )}
 
           {activeTab === TabTypes.Chats && <ChatsTab courseId={course.id} />}
-          {/* </> */}
         </div>
       )}
 

@@ -4,7 +4,12 @@ import { PlusIcon } from "lucide-react";
 
 const ChatsList = () => {
   return (
-    <div className="w-[260px] max-h-full h-full rounded-md bg-slate-50 flex flex-col gap-4 p-2">
+    <div
+      className="w-[260px] overflow-auto rounded-md bg-slate-50 flex flex-col gap-4 p-2"
+      style={{
+        height: "calc(100vh - 96px - 64px)",
+      }}
+    >
       <NewChatButton />
 
       <Separator />
