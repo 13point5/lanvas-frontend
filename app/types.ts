@@ -1,3 +1,5 @@
+import { Database } from "@/app/supabase.types";
+
 export enum Role {
   assistant,
   human,
@@ -22,13 +24,16 @@ export enum CourseMemberRole {
   student = "student",
 }
 
-export type CourseMember = {
-  id: number;
-  email: string;
-  created_at: string;
-  course_id: number;
-  role: CourseMemberRole;
-};
+// export type CourseMember = {
+//   id: number;
+//   email: string;
+//   created_at: string;
+//   course_id: number;
+//   role: CourseMemberRole;
+// };
+
+export type CourseMember =
+  Database["public"]["Tables"]["course_members"]["Row"];
 
 export type CourseMaterial = {
   id: number;

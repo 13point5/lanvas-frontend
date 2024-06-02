@@ -20,6 +20,7 @@ import { useState } from "react";
 import MaterialsTabV2 from "@/app/course/[id]/components/materials-tab-v2";
 import ChatsTab from "@/app/course/[id]/components/chats-tab";
 import { Skeleton } from "@/components/ui/skeleton";
+import StudentsTab from "@/app/course/[id]/components/students-tab";
 
 enum TabTypes {
   Materials = "materials",
@@ -69,7 +70,7 @@ const TeacherView = ({ course, isLoading, isError }: Props) => {
           <TabsList className="">
             <TabsTrigger value={TabTypes.Materials}>Materials</TabsTrigger>
             <TabsTrigger value={TabTypes.Chats}>Chats</TabsTrigger>
-            {/* <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger> */}
+            <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -81,6 +82,10 @@ const TeacherView = ({ course, isLoading, isError }: Props) => {
           )}
 
           {activeTab === TabTypes.Chats && <ChatsTab courseId={course.id} />}
+
+          {activeTab === TabTypes.Students && (
+            <StudentsTab courseId={course.id} />
+          )}
         </div>
       )}
 

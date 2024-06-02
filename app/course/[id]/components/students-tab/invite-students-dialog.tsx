@@ -30,7 +30,7 @@ const formSchema = z.object({
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  handleSubmit: (emails: string[]) => Promise<void>;
+  handleSubmit: (emails: string[]) => void;
 };
 
 const InviteStudentsDialog = ({ open, onOpenChange, handleSubmit }: Props) => {

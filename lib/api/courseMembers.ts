@@ -1,5 +1,9 @@
+import { Database } from "@/app/supabase.types";
 import { useAxios } from "@/lib/hooks/useAxios";
 import { AxiosInstance } from "axios";
+
+export type CourseMember =
+  Database["public"]["Tables"]["course_members"]["Row"];
 
 type GetCourseMembersPayload = {
   courseId: number;
@@ -8,7 +12,10 @@ type GetCourseMembersPayload = {
 const getCourseMembers = (
   payload: GetCourseMembersPayload,
   axiosInstance: AxiosInstance
-) => axiosInstance.get(`/courses/${payload.courseId}/members`);
+): Promise<CourseMember[]> =>
+  axiosInstance
+    .get(`/courses/${payload.courseId}/members`)
+    .then((res) => res.data);
 
 type AddCourseMembersPayload = {
   courseId: number;
@@ -18,10 +25,12 @@ type AddCourseMembersPayload = {
 const addCourseMembers = (
   payload: AddCourseMembersPayload,
   axiosInstance: AxiosInstance
-) =>
-  axiosInstance.post(`/courses/${payload.courseId}/members`, {
-    members: payload.members,
-  });
+): Promise<CourseMember[]> =>
+  axiosInstance
+    .post(`/courses/${payload.courseId}/members`, {
+      members: payload.members,
+    })
+    .then((res) => res.data);
 
 export const useCourseMembersApi = () => {
   const { axiosInstance } = useAxios();
