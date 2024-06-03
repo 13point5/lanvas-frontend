@@ -27,47 +27,15 @@ export const useCourseChatMessagesQuery = ({
   });
 };
 
-const chatMutationFn = async ({
-  message,
-  chatId,
-}: {
-  message: string;
-  courseId: CourseId;
-  chatId: CourseChat["id"];
-}) => {
-  return new Promise((resolve) =>
-    setTimeout(() => {
-      resolve({
-        message: {
-          id: 0,
-          chat_id: chatId,
-          role: "human",
-          content: message,
-          created_at: new Date(),
-          metadata: {},
-        },
-        response: {
-          id: 1,
-          chat_id: chatId,
-          role: "assistant",
-          content: "sup",
-          created_at: new Date(),
-          metadata: {},
-        },
-      });
-    }, 2000)
-  );
-};
-
 export const useCourseChatMessageMutation = () => {
   const queryClient = useQueryClient();
 
+  const { chat } = useCourseChatMessagesApi();
+
   return useMutation({
-    mutationFn: chatMutationFn,
+    mutationFn: chat,
 
     onSuccess: (data, variables) => {
-      console.log("data", data);
-      console.log("variables", variables);
       queryClient.setQueryData<CourseChatMessage[]>(
         getCourseChatMessagesKey({
           courseId: variables.courseId,

@@ -15,7 +15,9 @@ type Props = {
 const ChatsList = ({ courseId, currentChatId, setCurrentChatId }: Props) => {
   const chatsQuery = useCourseChatsQuery(courseId);
 
-  console.log("chatsQuery.data", chatsQuery.data);
+  const sortedChats = (chatsQuery.data || []).slice().sort((a, b) => {
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
 
   return (
     <div
@@ -38,7 +40,7 @@ const ChatsList = ({ courseId, currentChatId, setCurrentChatId }: Props) => {
           <Separator />
 
           <div className="flex flex-col gap-2">
-            {chatsQuery.data.map((item) => (
+            {sortedChats.map((item) => (
               <ChatItem
                 key={item.id}
                 name={item.title}

@@ -5,13 +5,11 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css";
 import { cn } from "@/lib/utils";
-import { ExternalLinkIcon, UserIcon, Volume2Icon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Message, Role } from "@/app/types";
-import Link from "next/link";
+import { UserIcon } from "lucide-react";
+import { CourseChatMessage } from "@/app/types";
 
 type Props = {
-  message: Message;
+  message: CourseChatMessage;
 };
 
 export const ChatMessage = ({ message }: Props) => {
@@ -22,13 +20,13 @@ export const ChatMessage = ({ message }: Props) => {
       <div
         className={cn(
           "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border",
-          role === Role.human
+          role === "human"
             ? "bg-background"
             : "bg-primary text-primary-foreground",
-          role !== Role.human && "border-[#10172A]"
+          role !== "human" && "border-[#10172A]"
         )}
       >
-        {role === Role.human ? <UserIcon /> : <IconOpenAI />}
+        {role === "human" ? <UserIcon /> : <IconOpenAI />}
       </div>
       <div className="flex-1 px-1 ml-4 space-y-4 overflow-hidden">
         <MemoizedReactMarkdown

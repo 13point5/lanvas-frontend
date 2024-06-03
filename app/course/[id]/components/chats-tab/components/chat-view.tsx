@@ -1,5 +1,5 @@
 import { CurrentChatId } from "@/app/course/[id]/components/chats-tab";
-import { Role, Message, CourseId } from "@/app/types";
+import { CourseId, CourseChatMessage } from "@/app/types";
 import { ChatMessage } from "@/components/chat-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,14 +13,17 @@ import { Loader2Icon, SendIcon } from "lucide-react";
 import { useState } from "react";
 
 const genMessages = (count: number) => {
-  const messages: Message[] = [];
+  const messages: CourseChatMessage[] = [];
 
   // Alternate between human and assistant roles
   for (let i = 0; i < count; i++) {
     messages.push({
-      id: `message-${i}`,
+      id: i,
       content: `Message ${i} lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
-      role: i % 2 === 0 ? Role.human : Role.assistant,
+      role: i % 2 === 0 ? "human" : "assistant",
+      created_at: new Date().toISOString(),
+      metadata: {},
+      chat_id: -1,
     });
   }
 
@@ -34,19 +37,14 @@ type Props = {
 };
 
 const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
-  const isLoading = false;
-  // const messages = genMessages(0);
-  console.log("chatId", chatId);
   const messagesQuery = useCourseChatMessagesQuery({ courseId, chatId });
-  console.log("messagesQuery.data", messagesQuery.data);
+  const messages = messagesQuery.data || [];
 
   const courseChatMutation = useCreateCourseChatMutation();
 
   const chatMutation = useCourseChatMessageMutation();
-  console.log("chatMutation.variables", chatMutation.variables);
-  console.log("chatMutation.data", chatMutation.data);
 
-  const [messages, setMessages] = useState([]);
+  const isLoading = courseChatMutation.isPending || chatMutation.isPending;
 
   const [input, setInput] = useState("");
 
@@ -62,7 +60,6 @@ const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
       courseId,
       title: chatTitle,
     });
-    console.log("chat", chat);
 
     setCurrentChatId(chat.id);
 
@@ -79,7 +76,7 @@ const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
       <div className="overflow-auto w-full h-full max-h-full flex-1">
         {messages.map(
           (message, index) =>
-            message.role !== Role.system && (
+            message.role !== "system" && (
               <div key={message.id}>
                 <ChatMessage message={message} />
 
@@ -88,12 +85,15 @@ const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
             )
         )}
 
-        {chatMutation.isPending && (
+        {chatMutation.isPending && chatId !== null && (
           <ChatMessage
             message={{
-              id: "temp",
+              id: -1,
               content: chatMutation.variables.message,
-              role: Role.human,
+              role: "human",
+              chat_id: chatId,
+              created_at: new Date().toISOString(),
+              metadata: {},
             }}
           />
         )}
