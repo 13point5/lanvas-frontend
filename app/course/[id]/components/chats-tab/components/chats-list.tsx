@@ -1,3 +1,4 @@
+import { CurrentChatId } from "@/app/course/[id]/components/chats-tab";
 import { ChatItem } from "@/app/course/[id]/components/chats-tab/components/chat-item";
 import { NewChatButton } from "@/app/course/[id]/components/chats-tab/components/new-chat-button";
 import { Button } from "@/components/ui/button";
@@ -7,9 +8,11 @@ import { Loader2Icon } from "lucide-react";
 
 type Props = {
   courseId: number;
+  currentChatId: CurrentChatId;
+  setCurrentChatId: (newChatId: CurrentChatId) => void;
 };
 
-const ChatsList = ({ courseId }: Props) => {
+const ChatsList = ({ courseId, currentChatId, setCurrentChatId }: Props) => {
   const chatsQuery = useCourseChatsQuery(courseId);
 
   console.log("chatsQuery.data", chatsQuery.data);
@@ -23,8 +26,6 @@ const ChatsList = ({ courseId }: Props) => {
     >
       <NewChatButton courseId={courseId} />
 
-      <Separator />
-
       {chatsQuery.isPending && (
         <div className="flex gap-2 items-center">
           <Loader2Icon className="animate-spin" size={8} />
@@ -32,12 +33,21 @@ const ChatsList = ({ courseId }: Props) => {
         </div>
       )}
 
-      {chatsQuery.data && (
-        <div className="flex flex-col">
-          {chatsQuery.data.map((item) => (
-            <ChatItem key={item.id} name={item.title} />
-          ))}
-        </div>
+      {chatsQuery.data && chatsQuery.data.length > 0 && (
+        <>
+          <Separator />
+
+          <div className="flex flex-col gap-2">
+            {chatsQuery.data.map((item) => (
+              <ChatItem
+                key={item.id}
+                name={item.title}
+                active={item.id === currentChatId}
+                onClick={() => setCurrentChatId(item.id)}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

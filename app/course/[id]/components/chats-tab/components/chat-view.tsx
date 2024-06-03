@@ -1,24 +1,16 @@
-import { Role, Message } from "@/app/types";
+import { CurrentChatId } from "@/app/course/[id]/components/chats-tab";
+import { Role, Message, CourseId } from "@/app/types";
 import { ChatMessage } from "@/components/chat-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useCoursesApi } from "@/lib/api/courses";
+import {
+  useCourseChatMessageMutation,
+  useCourseChatMessagesQuery,
+} from "@/lib/hooks/api/courseChatMessages";
+import { useCreateCourseChatMutation } from "@/lib/hooks/api/courseChats";
 import { Loader2Icon, SendIcon } from "lucide-react";
 import { useState } from "react";
-
-const messages: Message[] = [
-  {
-    id: "a0b1c2d3-e4f5-6g7h-8i9j-a1b2c3d4e5f6",
-    content: "Hi, how may I help you?",
-    role: Role.assistant,
-  },
-  {
-    id: "235f47fe-734c-4654-837d-c0cbd8fe2efb",
-    content: "any courses on education?",
-    role: Role.human,
-  },
-];
 
 const genMessages = (count: number) => {
   const messages: Message[] = [];
@@ -35,11 +27,26 @@ const genMessages = (count: number) => {
   return messages;
 };
 
-const ChatView = () => {
-  const isLoading = false;
-  const messages = genMessages(20);
+type Props = {
+  courseId: CourseId;
+  chatId: CurrentChatId;
+  setCurrentChatId: (newChatId: CurrentChatId) => void;
+};
 
-  const { dummyChat } = useCoursesApi();
+const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
+  const isLoading = false;
+  // const messages = genMessages(0);
+  console.log("chatId", chatId);
+  const messagesQuery = useCourseChatMessagesQuery({ courseId, chatId });
+  console.log("messagesQuery.data", messagesQuery.data);
+
+  const courseChatMutation = useCreateCourseChatMutation();
+
+  const chatMutation = useCourseChatMessageMutation();
+  console.log("chatMutation.variables", chatMutation.variables);
+  console.log("chatMutation.data", chatMutation.data);
+
+  const [messages, setMessages] = useState([]);
 
   const [input, setInput] = useState("");
 
@@ -49,6 +56,17 @@ const ChatView = () => {
 
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
+
+    const chatTitle = input.slice(0, 30);
+    const chat = await courseChatMutation.mutateAsync({
+      courseId,
+      title: chatTitle,
+    });
+    console.log("chat", chat);
+
+    setCurrentChatId(chat.id);
+
+    chatMutation.mutate({ message: input, courseId, chatId: chat.id });
   };
 
   return (
@@ -68,6 +86,16 @@ const ChatView = () => {
                 {index < messages.length - 1 && <Separator className="my-4" />}
               </div>
             )
+        )}
+
+        {chatMutation.isPending && (
+          <ChatMessage
+            message={{
+              id: "temp",
+              content: chatMutation.variables.message,
+              role: Role.human,
+            }}
+          />
         )}
       </div>
 

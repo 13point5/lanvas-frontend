@@ -38,3 +38,6 @@ export type Course = Database["public"]["Tables"]["courses"]["Row"];
 export type CourseId = Course["id"];
 
 export type CourseChat = Database["public"]["Tables"]["course_chats"]["Row"];
+
+export type CourseChatMessage =
+  Database["public"]["Tables"]["course_chat_messages"]["Row"];

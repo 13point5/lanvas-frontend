@@ -35,7 +35,7 @@ export const useCoursesMutation = () => {
   });
 };
 
-export const getCourseKey = (id: number) => [ROOT_QUERY_KEY, id];
+export const getCourseKey = (id: number) => [...ROOT_QUERY_KEY, id];
 
 export const useCourseQuery = (id: number) => {
   const { getUserCourse } = useCoursesApi();
