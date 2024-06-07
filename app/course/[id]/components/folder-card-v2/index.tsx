@@ -5,8 +5,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CourseFolder } from "@/lib/api/courseFolders";
-import { Course } from "@/lib/api/courses";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import {
   FolderIcon,
@@ -20,6 +18,7 @@ import {
   useMoveCourseFolderMutation,
 } from "@/lib/hooks/api/courseFolders";
 import MoveCourseContentDialog from "@/components/move-course-content-dialog";
+import { CourseFolder, Course } from "@/app/types";
 
 type Props = {
   id: CourseFolder["id"];

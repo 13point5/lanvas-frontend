@@ -1,6 +1,6 @@
 "use client";
 
-import { CourseFolder, FormStatus } from "@/app/types";
+import { Course, CourseFolder } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,9 +23,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useState } from "react";
-import { useCourseFoldersApi } from "@/lib/api/courseFolders";
 import { useRenameCourseFolderMutation } from "@/lib/hooks/api/courseFolders";
-import { Course } from "@/lib/api/courses";
 
 const formSchema = z.object({
   name: z.string(),
