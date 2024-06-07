@@ -1,4 +1,5 @@
-import { useCourseMembersApi, CourseMember } from "@/lib/api/courseMembers";
+import { CourseMember } from "@/app/types";
+import { useCourseMembersApi } from "@/lib/api/courseMembers";
 import { getCourseKey } from "@/lib/hooks/api/courses";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
