@@ -1,6 +1,6 @@
 "use client";
 
-import { CourseFolder, CourseMaterial, FormStatus } from "@/app/types";
+import { CourseMaterial, Course } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,10 +22,8 @@ import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect, useState } from "react";
-import { useCourseMaterialsApi } from "@/lib/api/courseMaterials";
+import { useEffect } from "react";
 import { useRenameCourseMaterialMutation } from "@/lib/hooks/api/courseMaterials";
-import { Course } from "@/lib/api/courses";
 
 const formSchema = z.object({
   name: z.string(),
