@@ -36,17 +36,20 @@ export const useCourseChatMessageMutation = () => {
     mutationFn: chat,
 
     onSuccess: (data, variables) => {
-      queryClient.setQueryData<CourseChatMessage[]>(
+      queryClient.setQueryData<{ role: string; content: string }[]>(
         getCourseChatMessagesKey({
           courseId: variables.courseId,
           chatId: variables.chatId,
         }),
         (oldData = []) => {
+          const humanMessage = { role: "human", content: data.input };
+          const aiMessage = { role: "ai", content: data.answer };
+
           if (!oldData) {
-            return [data.message, data.response];
+            return [humanMessage, aiMessage];
           }
 
-          return [...oldData, data.message, data.response];
+          return [...oldData, humanMessage, aiMessage];
         }
       );
     },

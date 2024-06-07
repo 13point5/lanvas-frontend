@@ -9,11 +9,14 @@ import { UserIcon } from "lucide-react";
 import { CourseChatMessage } from "@/app/types";
 
 type Props = {
-  message: CourseChatMessage;
+  message: {
+    role: string;
+    content: string;
+  };
 };
 
 export const ChatMessage = ({ message }: Props) => {
-  const { id, role, content } = message;
+  const { role, content } = message;
 
   return (
     <div className="group relative mb-4 flex items-start">
@@ -32,7 +35,7 @@ export const ChatMessage = ({ message }: Props) => {
         <MemoizedReactMarkdown
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeKatex]}
-          className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
+          className="prose break-words max-w-full"
           components={{
             p({ children }) {
               return <p className="mb-2 last:mb-0">{children}</p>;

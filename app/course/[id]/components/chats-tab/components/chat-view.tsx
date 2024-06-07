@@ -55,15 +55,23 @@ const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
 
-    const chatTitle = input.slice(0, 30);
-    const chat = await courseChatMutation.mutateAsync({
-      courseId,
-      title: chatTitle,
-    });
+    const message = input.slice();
+    setInput("");
 
-    setCurrentChatId(chat.id);
+    const chatTitle = message.slice(0, 30);
 
-    chatMutation.mutate({ message: input, courseId, chatId: chat.id });
+    if (!chatId) {
+      const chat = await courseChatMutation.mutateAsync({
+        courseId,
+        title: chatTitle,
+      });
+
+      setCurrentChatId(chat.id);
+
+      chatMutation.mutate({ message, courseId, chatId: chat.id });
+    } else {
+      chatMutation.mutate({ message, courseId, chatId });
+    }
   };
 
   return (
@@ -77,7 +85,7 @@ const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
         {messages.map(
           (message, index) =>
             message.role !== "system" && (
-              <div key={message.id}>
+              <div key={index}>
                 <ChatMessage message={message} />
 
                 {index < messages.length - 1 && <Separator className="my-4" />}
@@ -86,16 +94,15 @@ const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
         )}
 
         {chatMutation.isPending && chatId !== null && (
-          <ChatMessage
-            message={{
-              id: -1,
-              content: chatMutation.variables.message,
-              role: "human",
-              chat_id: chatId,
-              created_at: new Date().toISOString(),
-              metadata: {},
-            }}
-          />
+          <>
+            {messages.length > 0 && <Separator className="my-4" />}
+            <ChatMessage
+              message={{
+                content: chatMutation.variables.message,
+                role: "human",
+              }}
+            />
+          </>
         )}
       </div>
 
