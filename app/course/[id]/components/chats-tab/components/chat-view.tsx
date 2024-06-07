@@ -81,30 +81,38 @@ const ChatView = ({ courseId, chatId, setCurrentChatId }: Props) => {
         height: "calc(100vh - 96px - 64px)",
       }}
     >
-      <div className="overflow-auto w-full h-full max-h-full flex-1">
-        {messages.map(
-          (message, index) =>
-            message.role !== "system" && (
-              <div key={index}>
-                <ChatMessage message={message} />
+      {courseId !== null && messagesQuery.isPending ? (
+        <div className="overflow-auto w-full h-full max-h-full flex-1 flex items-center justify-center">
+          <Loader2Icon className="animate-spin mr-2" /> Fetching messages
+        </div>
+      ) : (
+        <div className="overflow-auto w-full h-full max-h-full flex-1">
+          {messages.map(
+            (message, index) =>
+              message.role !== "system" && (
+                <div key={index}>
+                  <ChatMessage message={message} />
 
-                {index < messages.length - 1 && <Separator className="my-4" />}
-              </div>
-            )
-        )}
+                  {index < messages.length - 1 && (
+                    <Separator className="my-4" />
+                  )}
+                </div>
+              )
+          )}
 
-        {chatMutation.isPending && chatId !== null && (
-          <>
-            {messages.length > 0 && <Separator className="my-4" />}
-            <ChatMessage
-              message={{
-                content: chatMutation.variables.message,
-                role: "human",
-              }}
-            />
-          </>
-        )}
-      </div>
+          {chatMutation.isPending && chatId !== null && (
+            <>
+              {messages.length > 0 && <Separator className="my-4" />}
+              <ChatMessage
+                message={{
+                  content: chatMutation.variables.message,
+                  role: "human",
+                }}
+              />
+            </>
+          )}
+        </div>
+      )}
 
       <form className="flex gap-4 w-full" onSubmit={handleSubmit}>
         <Input

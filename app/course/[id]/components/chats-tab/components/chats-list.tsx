@@ -1,10 +1,9 @@
 import { CurrentChatId } from "@/app/course/[id]/components/chats-tab";
 import { ChatItem } from "@/app/course/[id]/components/chats-tab/components/chat-item";
-import { NewChatButton } from "@/app/course/[id]/components/chats-tab/components/new-chat-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useCourseChatsQuery } from "@/lib/hooks/api/courseChats";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, PlusIcon } from "lucide-react";
 
 type Props = {
   courseId: number;
@@ -26,7 +25,15 @@ const ChatsList = ({ courseId, currentChatId, setCurrentChatId }: Props) => {
         height: "calc(100vh - 96px - 64px)",
       }}
     >
-      <NewChatButton courseId={courseId} />
+      <Button
+        onClick={() => {
+          setCurrentChatId(null);
+        }}
+        variant="ghost"
+        className="w-full justify-start"
+      >
+        <PlusIcon className="mr-2 w-4 h-4" /> New Chat
+      </Button>
 
       {chatsQuery.isPending && (
         <div className="flex gap-2 items-center">
