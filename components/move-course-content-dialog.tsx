@@ -10,11 +10,11 @@ import { CourseContentContext } from "@/lib/contexts/CourseContent";
 import { FileIcon, Loader2Icon } from "lucide-react";
 import { useContext, useState } from "react";
 import * as TreeView from "@/components/tree-view";
-import { CourseFolder } from "@/lib/api/courseFolders";
 import {
   FoldersNormalised,
   MaterialsNormalised,
 } from "@/app/course/[id]/components/materials-tab-v2/utils";
+import { CourseFolder } from "@/app/types";
 
 const renderNode = ({
   folderId,

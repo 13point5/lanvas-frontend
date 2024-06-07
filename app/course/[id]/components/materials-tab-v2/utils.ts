@@ -1,5 +1,4 @@
-import { CourseFolder } from "@/lib/api/courseFolders";
-import { CourseMaterial } from "@/lib/api/courseMaterials";
+import { CourseFolder, CourseMaterial } from "@/app/types";
 
 export type FoldersNormalised = {
   byId: Map<CourseFolder["id"], CourseFolder>;
