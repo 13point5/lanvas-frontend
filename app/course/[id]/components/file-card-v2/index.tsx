@@ -1,30 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   FileIcon,
-  FolderIcon,
   FolderSymlinkIcon,
   MoreVerticalIcon,
   PencilIcon,
-  TrashIcon,
 } from "lucide-react";
-import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useBoolean } from "@/lib/hooks/useBoolean";
 import RenameDialog from "@/app/course/[id]/components/file-card-v2/rename-dialog";
-import { CourseMaterial } from "@/lib/api/courseMaterials";
-import { Course } from "@/lib/api/courses";
 import { useMoveCourseMaterialMutation } from "@/lib/hooks/api/courseMaterials";
-import { CourseFolder } from "@/lib/api/courseFolders";
 import MoveCourseContentDialog from "@/components/move-course-content-dialog";
+import { Course, CourseFolder, CourseMaterial } from "@/app/types";
 
 type Props = {
   id: CourseMaterial["id"];

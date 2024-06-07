@@ -8,17 +8,12 @@ import {
   getMaterialsNormalised,
 } from "@/app/course/[id]/components/materials-tab-v2/utils";
 import FolderBreadcrumbs from "@/app/course/[id]/components/materials-tab-v2/folder-breadcrumbs";
-import { Button } from "@/components/ui/button";
-import { CourseFolder } from "@/lib/api/courseFolders";
 import { useCourseFoldersQuery } from "@/lib/hooks/api/courseFolders";
 import { useCourseMaterialsQuery } from "@/lib/hooks/api/courseMaterials";
-import { AreaChartIcon, LinkIcon, UploadIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Course } from "@/lib/api/courses";
 import { CourseContentContext } from "@/lib/contexts/CourseContent";
-import { EngagementAndUnderstandingInsights } from "@/app/course/[id]/components/materials-tab-v2/engagement-and-understanding";
-import { ModuleConcepts } from "@/app/course/[id]/components/materials-tab-v2/module-concepts-chart";
 import UploadMaterialButton from "@/app/course/[id]/components/materials-tab-v2/upload-material-button";
+import { Course, CourseFolder } from "@/app/types";
 
 type Props = {
   courseId: Course["id"];
