@@ -15,7 +15,13 @@ const CoursePage = ({ params: { id } }: Props) => {
   const courseQuery = useCourseQuery(id);
 
   if (courseQuery.data?.role === CourseMemberRole.student) {
-    return <StudentView />;
+    return (
+      <StudentView
+        course={courseQuery.data?.course || null}
+        isLoading={courseQuery.isPending}
+        isError={courseQuery.isError}
+      />
+    );
   }
 
   return (

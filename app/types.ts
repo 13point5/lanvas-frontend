@@ -7,6 +7,11 @@ export enum FormStatus {
   Success,
 }
 
+export enum AccessLevel {
+  Read,
+  Edit,
+}
+
 export enum CourseMemberRole {
   teacher = "teacher",
   student = "student",

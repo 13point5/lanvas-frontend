@@ -15,7 +15,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs-v2";
-import { Course } from "@/app/types";
+import { AccessLevel, Course } from "@/app/types";
 import { useState } from "react";
 import MaterialsTabV2 from "@/app/course/[id]/components/materials-tab-v2";
 import ChatsTab from "@/app/course/[id]/components/chats-tab";
@@ -43,7 +43,7 @@ const TeacherView = ({ course, isLoading, isError }: Props) => {
 
   return (
     <main className="min-h-screen flex flex-col relative">
-      <div className="flex flex-col gap-2 pt-4 px-6 border-b h-[96px]">
+      <div className="flex flex-col gap-2 pt-4 px-6 border-b">
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">
             <Link href="/">
@@ -66,19 +66,24 @@ const TeacherView = ({ course, isLoading, isError }: Props) => {
           <UserMenu />
         </div>
 
-        <Tabs value={activeTab} onValueChange={handleActiveTabChange}>
-          <TabsList className="">
-            <TabsTrigger value={TabTypes.Materials}>Materials</TabsTrigger>
-            <TabsTrigger value={TabTypes.Chats}>Chats</TabsTrigger>
-            <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {!isLoading && (
+          <Tabs value={activeTab} onValueChange={handleActiveTabChange}>
+            <TabsList className="">
+              <TabsTrigger value={TabTypes.Materials}>Materials</TabsTrigger>
+              <TabsTrigger value={TabTypes.Chats}>Chats</TabsTrigger>
+              <TabsTrigger value={TabTypes.Students}>Students</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        )}
       </div>
 
       {course && (
         <div className="w-full px-6 py-8 flex flex-col">
           {activeTab === TabTypes.Materials && (
-            <MaterialsTabV2 courseId={course.id} />
+            <MaterialsTabV2
+              courseId={course.id}
+              accessLevel={AccessLevel.Edit}
+            />
           )}
 
           {activeTab === TabTypes.Chats && <ChatsTab courseId={course.id} />}

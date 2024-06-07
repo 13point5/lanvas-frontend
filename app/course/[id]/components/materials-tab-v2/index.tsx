@@ -13,13 +13,14 @@ import { useCourseMaterialsQuery } from "@/lib/hooks/api/courseMaterials";
 import { useMemo, useState } from "react";
 import { CourseContentContext } from "@/lib/contexts/CourseContent";
 import UploadMaterialButton from "@/app/course/[id]/components/materials-tab-v2/upload-material-button";
-import { Course, CourseFolder } from "@/app/types";
+import { AccessLevel, Course, CourseFolder } from "@/app/types";
 
 type Props = {
   courseId: Course["id"];
+  accessLevel: AccessLevel;
 };
 
-const MaterialsTabV2 = ({ courseId }: Props) => {
+const MaterialsTabV2 = ({ courseId, accessLevel }: Props) => {
   const foldersQuery = useCourseFoldersQuery(courseId);
   const materialsQuery = useCourseMaterialsQuery(courseId);
   const [parentFolderBreadcrumbs, setParentFolderBreadcrumbs] = useState<
@@ -80,22 +81,19 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
           onItemClick={handleBreadcrumbItemClick}
         />
 
-        <div className="flex gap-4 items-center">
-          <UploadMaterialButton
-            courseId={courseId}
-            folderId={currentParentFolderId}
-          />
+        {accessLevel === AccessLevel.Edit && (
+          <div className="flex gap-4 items-center">
+            <UploadMaterialButton
+              courseId={courseId}
+              folderId={currentParentFolderId}
+            />
 
-          <NewFolderButton
-            courseId={courseId}
-            parentFolderId={currentParentFolderId}
-          />
-
-          {/* <Button variant="outline" className="w-fit" size="sm">
-            <LinkIcon className="mr-2 h-4 w-4" />
-            Copy Chatbot Link
-          </Button> */}
-        </div>
+            <NewFolderButton
+              courseId={courseId}
+              parentFolderId={currentParentFolderId}
+            />
+          </div>
+        )}
       </div>
 
       <CourseContentContext.Provider
@@ -117,16 +115,17 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
                   courseId={courseId}
                   name={folder.name}
                   onClick={handleFolderClick}
+                  accessLevel={accessLevel}
                 />
               ))}
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <h5 className="text-md font-semibold tracking-tight">Materials</h5>
+            <h5 className="text-md font-semibold tracking-tight">Files</h5>
 
             {currentMaterials.length === 0 && (
-              <p className="text-sm text-muted-foreground">No Materials yet</p>
+              <p className="text-sm text-muted-foreground">No Files yet</p>
             )}
 
             <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
@@ -136,16 +135,11 @@ const MaterialsTabV2 = ({ courseId }: Props) => {
                   id={material.id}
                   courseId={courseId}
                   name={material.name}
+                  accessLevel={accessLevel}
                 />
               ))}
             </div>
           </div>
-
-          {/* {currentParentFolderId === null ? (
-            <EngagementAndUnderstandingInsights />
-          ) : (
-            <ModuleConcepts />
-          )} */}
         </>
       </CourseContentContext.Provider>
     </div>

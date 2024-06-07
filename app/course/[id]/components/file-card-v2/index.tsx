@@ -16,15 +16,16 @@ import { useBoolean } from "@/lib/hooks/useBoolean";
 import RenameDialog from "@/app/course/[id]/components/file-card-v2/rename-dialog";
 import { useMoveCourseMaterialMutation } from "@/lib/hooks/api/courseMaterials";
 import MoveCourseContentDialog from "@/components/move-course-content-dialog";
-import { Course, CourseFolder, CourseMaterial } from "@/app/types";
+import { AccessLevel, Course, CourseFolder, CourseMaterial } from "@/app/types";
 
 type Props = {
   id: CourseMaterial["id"];
   name: CourseMaterial["name"];
   courseId: Course["id"];
+  accessLevel: AccessLevel;
 };
 
-const FileCard = ({ id, courseId, name }: Props) => {
+const FileCard = ({ id, courseId, name, accessLevel }: Props) => {
   const renameDialogState = useBoolean();
   const moveDialogState = useBoolean();
 
@@ -50,35 +51,37 @@ const FileCard = ({ id, courseId, name }: Props) => {
           </p>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit">
-            <MoreVerticalIcon className="" size={18} />
-          </DropdownMenuTrigger>
+        {accessLevel === AccessLevel.Edit && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="hover:bg-gray-300 rounded-full p-2 w-fit h-fit">
+              <MoreVerticalIcon className="" size={18} />
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
 
-                renameDialogState.on();
-              }}
-            >
-              <PencilIcon className="mr-4" size={14} /> Rename
-            </DropdownMenuItem>
+                  renameDialogState.on();
+                }}
+              >
+                <PencilIcon className="mr-4" size={14} /> Rename
+              </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
 
-                moveDialogState.on();
-              }}
-            >
-              <FolderSymlinkIcon className="mr-4" size={14} /> Move
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+                  moveDialogState.on();
+                }}
+              >
+                <FolderSymlinkIcon className="mr-4" size={14} /> Move
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {renameDialogState.value && (
