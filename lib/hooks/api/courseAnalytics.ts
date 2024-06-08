@@ -13,3 +13,12 @@ export const useCourseChatTopicsQuery = (courseId: CourseId) => {
     queryFn: () => getCourseChatTopics({ courseId }),
   });
 };
+
+export const useCourseChatMisconceptionsQuery = (courseId: CourseId) => {
+  const { getCourseChatMisconceptions } = useCourseAnalyticsApi();
+
+  return useQuery({
+    queryKey: [...getCourseAnalyticsKey(courseId), "misconceptions"],
+    queryFn: () => getCourseChatMisconceptions({ courseId }),
+  });
+};

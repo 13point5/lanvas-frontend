@@ -37,3 +37,6 @@ export type CourseChatMessage =
 
 export type CourseChatTopic =
   Database["public"]["Tables"]["course_chat_topics"]["Row"];
+
+export type CourseChatMisconception =
+  Database["public"]["Tables"]["course_chat_misconceptions"]["Row"];

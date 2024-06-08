@@ -44,6 +44,38 @@ export type Database = {
           },
         ]
       }
+      course_chat_misconceptions: {
+        Row: {
+          count: number
+          course_id: number
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          count?: number
+          course_id: number
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          count?: number
+          course_id?: number
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_chat_misconceptions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_chat_topics: {
         Row: {
           count: number
@@ -477,6 +509,47 @@ export type Database = {
           "": unknown
         }
         Returns: unknown
+      }
+      increment_column: {
+        Args: {
+          table_name: string
+          column_name: string
+          amount: number
+        }
+        Returns: Record<string, unknown>[]
+      }
+      increment_course_chat_misconceptions: {
+        Args: {
+          course_id: number
+          misconception_ids: number[]
+        }
+        Returns: {
+          count: number
+          course_id: number
+          created_at: string
+          id: number
+          name: string
+        }[]
+      }
+      increment_course_chat_topic: {
+        Args: {
+          course_id: number
+          topic_id: number
+        }
+        Returns: Record<string, unknown>[]
+      }
+      increment_course_chat_topics: {
+        Args: {
+          course_id: number
+          topic_ids: number[]
+        }
+        Returns: {
+          count: number
+          course_id: number
+          created_at: string
+          id: number
+          name: string
+        }[]
       }
       ivfflat_bit_support: {
         Args: {

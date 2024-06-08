@@ -16,7 +16,7 @@ type Props = {
 
 export const ChartCard = ({ title, description, children }: Props) => {
   return (
-    <Card className="w-fit">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
