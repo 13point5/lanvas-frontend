@@ -34,3 +34,6 @@ export type CourseChat = Database["public"]["Tables"]["course_chats"]["Row"];
 
 export type CourseChatMessage =
   Database["public"]["Tables"]["course_chat_messages"]["Row"];
+
+export type CourseChatTopic =
+  Database["public"]["Tables"]["course_chat_topics"]["Row"];

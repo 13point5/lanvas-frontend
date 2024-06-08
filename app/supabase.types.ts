@@ -44,6 +44,38 @@ export type Database = {
           },
         ]
       }
+      course_chat_topics: {
+        Row: {
+          count: number
+          course_id: number
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          count?: number
+          course_id: number
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          count?: number
+          course_id?: number
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_chat_topics_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_chats: {
         Row: {
           course_id: number | null
@@ -216,27 +248,37 @@ export type Database = {
       }
       documents: {
         Row: {
-          content: string | null
-          embedding: string | null
-          file_id: number | null
+          content: string
+          course_id: number
+          embedding: string
+          file_id: number
           id: number
-          metadata: Json | null
+          metadata: Json
         }
         Insert: {
-          content?: string | null
-          embedding?: string | null
-          file_id?: number | null
+          content: string
+          course_id: number
+          embedding: string
+          file_id: number
           id?: number
-          metadata?: Json | null
+          metadata: Json
         }
         Update: {
-          content?: string | null
-          embedding?: string | null
-          file_id?: number | null
+          content?: string
+          course_id?: number
+          embedding?: string
+          file_id?: number
           id?: number
-          metadata?: Json | null
+          metadata?: Json
         }
         Relationships: [
+          {
+            foreignKeyName: "documents_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_documents_file_id_fkey"
             columns: ["file_id"]
@@ -491,6 +533,19 @@ export type Database = {
           query_embedding: string
           match_count?: number
           filter?: Json
+        }
+        Returns: {
+          id: number
+          content: string
+          metadata: Json
+          similarity: number
+        }[]
+      }
+      match_documents_by_course_id: {
+        Args: {
+          query_embedding: string
+          course_id_arg: number
+          match_count?: number
         }
         Returns: {
           id: number
