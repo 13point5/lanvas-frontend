@@ -45,8 +45,8 @@ const TeacherView = ({ course, isLoading, isError }: Props) => {
 
   return (
     <main className="min-h-screen flex flex-col relative">
-      <div className="flex flex-col gap-2 pt-4 px-6 border-b">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 pt-4 px-6 border-b h-[96px] sticky top-0 z-50 bg-white">
+        <div className="flex items-center justify-between bg-white">
           <div className="flex gap-2 items-center">
             <Link href="/">
               <HomeIcon size={20} />
