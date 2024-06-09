@@ -20,3 +20,9 @@ Additionally the platform provides faculty aggregated and anonymous analytics on
 
 5. Student Management System
    ![student management](assets/students-1.png)
+
+## Main Backend Architecture
+
+The diagram below shows the architecture for the main chat and analytics parts of the platform. For more information please visit the [backend repo](https://github.com/13point5/lanvas-backend).
+
+![architecture](assets/architecture.png)
